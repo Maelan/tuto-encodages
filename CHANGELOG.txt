@@ -1,0 +1,3 @@
+version 1
+	version plus ou moins directement reprise du Site du Zéro, après
+	reformulations et adaptation au format de Zeste de Savoir

@@ -1,0 +1,19 @@
+TODO:
+- catégorie(s)
+- légendes et centrage des tableaux
+- remplacer - par ‐
+- rôle de l’Inde dans le dvlpt d’Unicode (10 pages de code nationales)
+- histoire ISO / consortium Unicode
+- GB 18030
+- encodages asiatiques (voir commentaire de rz0)
+- https://en.wikipedia.org/wiki/Han_unification
+- structure JUC (plans)
+- polices (« glyphe »)
+- emojis http://unicode.org/emoji/charts/index.html
+- encodages type uuencode, base64, quoted-printable… (évoqués avec `recode`)
+- republier le pavé sur la norme C originellement publié sur PdP
+- référence :
+	http://www.cl.cam.ac.uk/~mgk25/unicode.html
+	(centré sur la migration de Linux à l’Unicode mais aborde beaucoup d’aspects :
+	BOM, programmation en C, bibliothèques, normalisation, translittération,
+	polices…)

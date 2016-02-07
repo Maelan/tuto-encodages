@@ -1,656 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<minituto id="528860" generator="VT 3.5.2" language="zCode">
-  <titre>
-    <![CDATA[Comprendre les encodages]]>
-  </titre>
-  <avancement>
-    <![CDATA[100]]>
-  </avancement>
-  <licence>
-    <![CDATA[6]]>
-  </licence>
-  <difficulte>
-    <![CDATA[1]]>
-  </difficulte>
-  <temps>
-    <![CDATA[120]]>
-  </temps>
-  <introduction>
-    <![CDATA[<position valeur="justifie">Aux détours de vos aventures informatiques, vous entendez parler de <italique>charset</italique>, d’<italique>encodage</italique>, d’<italique>ASCII</italique>, d’<italique>UTF-8</italique>, d’<italique>ISO-8859</italique>, de <italique>latin-1</italique>… et vous demandez ce que sont ces drôles de bestioles ?
-
-Votre programme ou site web est défiguré par les lettres accentuées et « caractères spéciaux » qui vous rendent de splendides <couleur nom="rouge">Ã©</couleur> ou <couleur nom="rouge">�</couleur> ?
-
-Webmestre, vous recopiez bêtement au début de vos toutes pages HTML la ligne<code type="html"><meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1"/></code>sans y comprendre que pouic ?
-
-Ce cours vous est destiné. Tout y sera expliqué depuis le début et après l’avoir lu, promis, vous ne serez plus jamais embêtés par ce genre de désagréments.</position>]]>
-  </introduction>
-  <sousparties>
-    
-      <souspartie id="584652">
-	<titre>
-	  <![CDATA[Un peu de théorie : le texte en informatique]]>
-	</titre>
-	<texte>
-	  <![CDATA[<position valeur="justifie">Autant vous le dire tout de suite : tout ce qui sera dit dans ce cours tournera autour d’une même problématique : la façon dont on stocke du texte dans un ordinateur.
-
-Comme vous le savez peut-être, un ordinateur ne peut stocker que des nombres, ou plus précisément des 0 et des 1 (des « <italique>bits</italique> ») qu’on regroupe pour former des nombres en binaire. Pour plus d’informations sur le binaire et la représentation en mémoire des nombres, je vous invite à consulter <lien url="http://www.siteduzero.com/tutoriel-3-509205-un-ordinateur-c-est-tres-bete-ca-ne-sait-pas-compter-jusqu-a-deux.html">ce tutoriel</lien>.
-Comment fait-on alors pour écrire du texte ? La réponse est toute bête : on associe à chaque <gras><couleur nom="vertf">caractère</couleur></gras> (une lettre, un signe de ponctuation, une espace…) un nombre. Un texte est alors une suite de ces nombres, on parle de <gras>chaîne de caractères</gras>.
-
-Par exemple, on peut décider ceci :<position valeur="centre"><tableau><legende>Exemple fictif de correspondance nombre — caractère</legende><ligne><entete>Caractère</entete><cellule><gras>A</gras></cellule><cellule><gras>B</gras></cellule><cellule><gras>C</gras></cellule><cellule>…</cellule><cellule><gras>Z</gras></cellule><cellule><gras>0</gras></cellule><cellule><gras>1</gras></cellule><cellule><gras>2</gras></cellule><cellule>…</cellule><cellule><gras>9</gras></cellule><cellule><gras>.</gras></cellule><cellule><gras>,</gras></cellule><cellule><gras>:</gras></cellule><cellule><gras>?</gras></cellule><cellule><gras>!</gras></cellule><cellule><italique>espace</italique></cellule></ligne><ligne><entete>Nombre associé</entete><cellule>0</cellule><cellule>1</cellule><cellule>2</cellule><cellule>…</cellule><cellule>25</cellule><cellule>26</cellule><cellule>27</cellule><cellule>28</cellule><cellule>…</cellule><cellule>35</cellule><cellule>36</cellule><cellule>37</cellule><cellule>38</cellule><cellule>39</cellule><cellule>40</cellule><cellule>41</cellule></ligne></tableau></position>
-Avec cet exemple fictif, le texte « SALUT LES ZEROS ! » donnerait ceci en mémoire :<code> S  A  L  U  T     L  E  S     Z  E  R  O  S     !18 00 11 20 19 41 11 04 18 41 25 04 17 14 18 41 40</code>
-Comme vous le voyez, on a donné un nombre unique pour chaque lettre de l’alphabet (de A à Z), pour les dix chiffres (de 0 à 9) et pour les signes de ponctuation, sans oublier l’espace.
-
-Cet exemple nous montre comment les informaticiens inventent une façon de coder un texte en mémoire.
-Premièrement, on décide de l’<gras>ensemble des caractères</gras> dont on a besoin, et on assigne à chacun un <gras>identifiant numérique unique appelé code</gras>. Cet ensemble est appelé <gras><couleur nom="vertf">jeu de caractères codés</couleur></gras> (en anglais <italique>charset</italique>, abréviation de <italique>character set</italique>) et peut se résumer dans un tableau de correspondance comme ci-dessus.
-Ensuite, il faut déterminer l’<gras><couleur nom="vertf">encodage</couleur></gras> (<italique>encoding</italique>), c’est-à-dire <gras>la façon de transcrire un texte</gras> grâce aux codes des caractères qui le composent, selon un jeu de caractères donné. Le moyen le plus simple est d’écrire directement chaque code (auquel cas on parle de <gras><couleur nom="vertf">page de code</couleur></gras> — <italique>charmap</italique>) ; le jeu et l’encodage sont alors confondus. On a procédé de cette façon dans l’exemple ci-dessus, mais ce n’est pas toujours satisfaisant. C’est pourquoi il faut bien retenir la différence entre jeu de caractères et encodage.
-
-
-Ça, c’est pour la théorie. Maintenant, place à la pratique ! L’exemple que je vous ai proposé était simple. Trop simple. La réalité est tout autre pour deux raisons principales :<liste type="1"><puce>Il y a bien plus de caractères à gérer.<liste><puce>Il y a des caractères particuliers, dits « de contrôle », qui ne servent pas pour un symbole « imprimable » mais donnent des indications aux programmes qui manipulent les chaînes de caractères. Le plus important est le caractère « fin de chaîne » qui sert à indiquer où s’arrête la chaîne (sinon, le programme n’aurait pas de moyen de le savoir et continuerait à lire ce qui se trouve après, ce qui nous vaudrait de belles erreurs).</puce><puce>De plus, il y a aussi les lettres minuscules, que je n’ai pas mis dans mon exemple. Il faudrait aussi pouvoir gérer les accents, les symboles de monnaie… voire, soyons fous, penser aux langues non latines (les Arabes et les Chinois ayant peut-être envie de parler leur langue).
-C’est là que ça devient vraiment problématique, comme nous allons le voir.</puce></liste>
-</puce><puce>Il faut aussi considérer les contraintes matérielles. En effet, comme je vous l’ai dit, un ordinateur ne connaît que le binaire. Les bits sont regroupés par groupes de 8 appelés « <italique>octets</italique> ». Un octet ne peut stocker que les nombres entiers de 0 à 255 (soit 256 = 2<exposant>8</exposant> possibilités, pour les matheux). Si cela ne suffit pas, on peut rassembler les octets par 2, 4 ou plus pour avoir de plus grands nombres.
-Dans nos encodages, il faudra tenir compte de ces limites, c’est-à-dire s'arranger pour que les codes de notre jeu tiennent tous sur un ou deux octets par exemple.</puce></liste>
-
-
-</position>]]>
-	</texte>
-      </souspartie>
-    
-      <souspartie id="584676">
-	<titre>
-	  <![CDATA[La grande épopée des encodages]]>
-	</titre>
-	<texte>
-	  <![CDATA[<position valeur="justifie">Pour bien cerner les problèmes causés par les encodages et la situation actuelle, le mieux reste encore de retracer leur histoire. En avant !
-
-
-
-<titre1>Au commencement était l’ASCII</titre1>
-
-Le premier encodage historique est l’<gras><couleur nom="orange">ASCII</couleur></gras>, soit l’<italique>American Standard Code for Information Interchange</italique> (en français, le <italique>code américain normalisé pour l’échange d'informations</italique>). C’est une norme américaine, inventée en 1961, qui avait pour but d'organiser le bazar informatique à l’échelle nationale. Ce n’est pas le premier encodage utilisé mais on peut oublier les précédents.
-
-Le terme « ASCII » est employé de manière incorrecte par beaucoup de monde sans savoir ce qu’il désigne réellement.
-
-Le jeu de caractères ASCII utilise <gras>7 bits</gras> (et non 8 !) et dispose donc de <gras>128 (2<exposant>7</exposant>) caractères uniquement, numérotés de 0 à 127</gras>. En effet, il est paru à une époque où des regroupements par 7 au lieu de 8 étaient encore assez fréquents.
-Sans plus attendre, voici la table de l’ASCII :
-<position valeur="centre"><tableau><legende>Table des caractères ASCII</legende><ligne><entete> </entete><entete>0</entete><entete>1</entete><entete>2</entete><entete>3</entete><entete>4</entete><entete>5</entete><entete>6</entete><entete>7</entete><entete>8</entete><entete>9</entete><entete>A</entete><entete>B</entete><entete>C</entete><entete>D</entete><entete>E</entete><entete>F</entete></ligne><ligne><entete>00</entete><cellule><touche><couleur nom="bleu">NUL</couleur></touche></cellule><cellule><touche><couleur nom="bleu">SOH</couleur></touche></cellule><cellule><touche><couleur nom="bleu">STX</couleur></touche></cellule><cellule><touche><couleur nom="bleu">ETX</couleur></touche></cellule><cellule><touche><couleur nom="bleu">EOT</couleur></touche></cellule><cellule><touche><couleur nom="bleu">ENQ</couleur></touche></cellule><cellule><touche><couleur nom="bleu">ACK</couleur></touche></cellule><cellule><touche><couleur nom="bleu">BEL</couleur></touche></cellule><cellule><touche><couleur nom="bleu">BS</couleur></touche></cellule><cellule><touche><italique>HT</italique></touche></cellule><cellule><touche><italique>LF</italique></touche></cellule><cellule><touche><italique>VT</italique></touche></cellule><cellule><touche><italique>FF</italique></touche></cellule><cellule><touche><italique>CR</italique></touche></cellule><cellule><touche><couleur nom="bleu">SO</couleur></touche></cellule><cellule><touche><couleur nom="bleu">SI</couleur></touche></cellule></ligne><ligne><entete>10</entete><cellule><touche><couleur nom="bleu">DLE</couleur></touche></cellule><cellule><touche><couleur nom="bleu">DC1</couleur></touche></cellule><cellule><touche><couleur nom="bleu">DC2</couleur></touche></cellule><cellule><touche><couleur nom="bleu">DC3</couleur></touche></cellule><cellule><touche><couleur nom="bleu">DC4</couleur></touche></cellule><cellule><touche><couleur nom="bleu">NAK</couleur></touche></cellule><cellule><touche><couleur nom="bleu">SYN</couleur></touche></cellule><cellule><touche><couleur nom="bleu">ETB</couleur></touche></cellule><cellule><touche><couleur nom="bleu">CAN</couleur></touche></cellule><cellule><touche><couleur nom="bleu">EM</couleur></touche></cellule><cellule><touche><couleur nom="bleu">SUB</couleur></touche></cellule><cellule><touche><couleur nom="bleu">ESC</couleur></touche></cellule><cellule><touche><couleur nom="bleu">FS</couleur></touche></cellule><cellule><touche><couleur nom="bleu">GS</couleur></touche></cellule><cellule><touche><couleur nom="bleu">RS</couleur></touche></cellule><cellule><touche><couleur nom="bleu">US</couleur></touche></cellule></ligne><ligne><entete>20</entete><cellule><touche><italique>SP</italique></touche></cellule><cellule>!</cellule><cellule>"</cellule><cellule>#</cellule><cellule>$</cellule><cellule>%</cellule><cellule>&</cellule><cellule>'</cellule><cellule>(</cellule><cellule>)</cellule><cellule>*</cellule><cellule>+</cellule><cellule>,</cellule><cellule>-</cellule><cellule>.</cellule><cellule>/</cellule></ligne><ligne><entete>30</entete><cellule>0</cellule><cellule>1</cellule><cellule>2</cellule><cellule>3</cellule><cellule>4</cellule><cellule>5</cellule><cellule>6</cellule><cellule>7</cellule><cellule>8</cellule><cellule>9</cellule><cellule>:</cellule><cellule>;</cellule><cellule><</cellule><cellule>=</cellule><cellule>></cellule><cellule>?</cellule></ligne><ligne><entete>40</entete><cellule>@</cellule><cellule>A</cellule><cellule>B</cellule><cellule>C</cellule><cellule>D</cellule><cellule>E</cellule><cellule>F</cellule><cellule>G</cellule><cellule>H</cellule><cellule>I</cellule><cellule>J</cellule><cellule>K</cellule><cellule>L</cellule><cellule>M</cellule><cellule>N</cellule><cellule>O</cellule></ligne><ligne><entete>50</entete><cellule>P</cellule><cellule>Q</cellule><cellule>R</cellule><cellule>S</cellule><cellule>T</cellule><cellule>U</cellule><cellule>V</cellule><cellule>W</cellule><cellule>X</cellule><cellule>Y</cellule><cellule>Z</cellule><cellule>[</cellule><cellule>\</cellule><cellule>]</cellule><cellule>^</cellule><cellule>_</cellule></ligne><ligne><entete>60</entete><cellule>`</cellule><cellule>a</cellule><cellule>b</cellule><cellule>c</cellule><cellule>d</cellule><cellule>e</cellule><cellule>f</cellule><cellule>g</cellule><cellule>h</cellule><cellule>i</cellule><cellule>j</cellule><cellule>k</cellule><cellule>l</cellule><cellule>m</cellule><cellule>n</cellule><cellule>o</cellule></ligne><ligne><entete>70</entete><cellule>p</cellule><cellule>q</cellule><cellule>r</cellule><cellule>s</cellule><cellule>t</cellule><cellule>u</cellule><cellule>v</cellule><cellule>w</cellule><cellule>x</cellule><cellule>y</cellule><cellule>z</cellule><cellule>{</cellule><cellule>|</cellule><cellule>}</cellule><cellule>~</cellule><cellule><touche><couleur nom="bleu">DEL</couleur></touche></cellule></ligne></tableau></position>
-
-<question>Hé, mais j’y comprends rien à ton tableau, moi !</question>Chaque case correspond à l’un des 128 caractères de l’ASCII rangés dans l'ordre.
-Pour retrouver le code associé à un caractère, il faut regarder l’en-tête de sa ligne et celui de sa colonne ; il contiennent des valeurs <souligne>en hexadécimal</souligne> (si vous ne connaissez pas l’hexadécimal, allez voir <lien url="http://www.siteduzero.com/tutoriel-3-509205-un-ordinateur-c-est-tres-bete-ca-ne-sait-pas-compter-jusqu-a-deux.html#ss_part_1">cette partie de tutoriel</lien>) qu’il faut additionner. Ainsi le caractère Z a pour code hexadécimal <taille valeur="tpetit">0x</taille>50+<taille valeur="tpetit">0x</taille>A = <taille valeur="tpetit">0x</taille>5A (soit 90 en décimal).
-
-Regardons un peu ce qu’il y a dans l’ASCII :<liste><puce>les 26 lettres de l’alphabet latin, en majuscules (<taille valeur="tpetit">0x</taille>41 — <taille valeur="tpetit">0x</taille>5A) et en minuscules (<taille valeur="tpetit">0x</taille>61 — <taille valeur="tpetit">0x</taille>7A), ainsi que les chiffres de 0 à 9 ;</puce><puce>divers signes de ponctuation, et d’autres symboles tels que les crochets, les accolades, l'arrobase… ;</puce> <puce>des « caractères blancs », c'est-à-dire l’espace mais aussi d’autres tels que le retour à la ligne (eh oui, c’est aussi un caractère). Ils sont marqués comme <touche><italique>ça</italique></touche>, en voici la liste :<liste><puce><touche><italique>SP</italique></touche> (<taille valeur="tpetit">0x</taille>20) : espace (<italique>space</italique>) ;</puce><puce><touche><italique>HT</italique></touche> (<taille valeur="tpetit">0x</taille>09) : tabulation horizontale (<italique>horizontal tab</italique>), le <minicode type="c">'\t'</minicode> des programmeurs ;</puce><puce><touche><italique>VT</italique></touche> (<taille valeur="tpetit">0x</taille>0B) : tabulation verticale (<italique>vertical tab</italique>) ;</puce><puce><touche><italique>LF</italique></touche> (<taille valeur="tpetit">0x</taille>0A) : nouvelle ligne (<italique>line feed</italique>), le <minicode type="c">'\n'</minicode> des programmeurs ;</puce><puce><touche><italique>CR</italique></touche> (<taille valeur="tpetit">0x</taille>0D) : retour chariot (<italique>carriage return</italique>), le <minicode type="c">'\r'</minicode> des programmeurs ; marque la fin d’une ligne ;</puce><puce><touche><italique>FF</italique></touche> (<taille valeur="tpetit">0x</taille>0C) : nouvelle page (<italique>form feed</italique>) ;</puce></liste>
-Notez que <touche><italique>LF</italique></touche> et <touche><italique>CR</italique></touche> remplissent des rôles très proches. Sous Windows on utilise une combinaison des deux (<touche><italique>CR LF</italique></touche>) à la fin de chaque ligne ; sous Linux et Mac OS X, on ne se sert que de <touche><italique>LF</italique></touche> ; enfin, sous Mac avant Mac OS X, on ne se servait que de <touche><italique>CR</italique></touche>. Un joyeux bazar !</puce> <puce>des caractères de contrôle non imprimables (<taille valeur="tpetit">0x</taille>00 — <taille valeur="tpetit">0x</taille>1F, et <taille valeur="tpetit">0x</taille>7F), marqués comme <touche><couleur nom="bleu">ça</couleur></touche> ; en voici quelques-uns :<liste><puce><touche><couleur nom="bleu">NUL</couleur></touche> (<taille valeur="tpetit">0x</taille>00) : caractère nul (<italique>null</italique>), le <minicode type="c">'\0'</minicode> des programmeurs ; c’est le caractère servant à marquer la fin d’une chaîne de caractères ;</puce><puce>des caractères servant à la communication entre programmes, périphériques ou machines ;</puce><puce>des caractères correspondant à des actions, comme <touche><couleur nom="bleu">BS</couleur></touche> (<italique>backspace</italique>, retour arrière), <touche><couleur nom="bleu">ESC</couleur></touche> (<italique>escape</italique>, échappement) ou <touche><couleur nom="bleu">CAN</couleur></touche> (<italique>cancel</italique>, annulation) ;</puce><puce>d’autres encore.</puce></liste></puce></liste>
-
-Un exemple ? Tout d’suite m’dame !
-<citation nom="Texte à encoder">Et l'ASCII survint.</citation>
-<code type="texte encodé en ASCII">texte :             E  t     l  '  A  S  C  I  I     s  u  r  v  i  n  t  .  valeur en ASCII :   45 74 20 6C 27 41 53 43 49 49 20 73 75 72 76 69 6E 74 2E</code>Les valeurs sont en hexadécimal.
-
-
-Les 128 caractères de l’ASCII n’ont pas été placés au hasard. Leurs codes ont été soigneusement étudiés. Ci-dessous, quelques exemples pour votre culture.<liste><puce>À l’époque reculée où a été conçu l’ASCII, on communiquait encore parfois des données à l’ordinateur <italique>via</italique> des cartes perforées. Chaque emplacement codait un bit : 1 s’il y avait un trou, 0 sinon. La perforation était irréversible. Lorsqu'on n’avait pas encore spécifié de caractère particulier, on laissait tous les emplacements intacts et le caractère valait donc 0 (tous les bits à 0). Ce caractère « non spécifié » se retrouve en ASCII avec <touche><couleur nom="bleu">NUL</couleur></touche>, le caractère nul, qui vaut 0. De même, lorsqu’on voulait effacer un caractère on perçait tous les emplacements, ce qui donnait 127 (tous les bits à 1) ; le caractère ASCII <touche><couleur nom="bleu">DEL</couleur></touche> (<italique>delete</italique>) correspond justement à cette suppression.</puce><puce>Les lettres majuscules sont séparées de leurs homologues minuscules par un intervalle de 32. Cela signifie qu’il suffit de modifier un bit (le 6<exposant>e</exposant>) pour passer des unes aux autres, ce qui simplifie les traitements.</puce></liste>
-Pour plus de détails, consultez <lien type="wikipedia" url="American Standard Code for Information Interchange">l’article de Wikipédia</lien>. ;)
-
-
-Comme vous voyez, l’ASCII est simple. Il ne comporte que le strict nécessaire pour l'époque, pour utiliser un ordinateur… en anglais. Que les 26 lettres de l’alphabet latin de base, pas d’accents, etc. Vous vous en doutez certainement, les autres pays ont voulu pouvoir utiliser leur propre langage correctement.
-
-
-
-<titre1>La révolte gronde</titre1>
-
-C'est pourquoi des extensions de l’ASCII sont apparues.
-Certaines gardent la base ASCII et utilisent le 8<exposant>e</exposant> bit laissé libre afin d'avoir plus de caractères à disposition (deux fois plus, 256 = 2<exposant>8</exposant> au total). Ainsi, les codes de 0 à 127 correspondent encore aux caractères ASCII, tandis que les codes supérieurs (de 128 à 255, c’est-à-dire ceux avec le 8<exposant>e</exposant> bit valant 1) servent pour les nouveaux caractères.
-D’autres restent sur 7 bits, et modifient carrément les 128 caractères de l’ASCII pour leur propres besoins.
-
-Vous imaginez la pagaille monstrueuse que ça a été, lorsque chaque pays ou groupe linguistique s’est mis à éditer sa propre page de code. Ça fonctionnait bien tant que les documents ne quittaient pas la zone où leur propre encodage était en usage, mais les échanges internationaux étaient sujets à problèmes. Comme un même code signifiait des caractères différents d’un jeu à l'autre, le récepteur ne lisait pas la même chose que le destinateur. Par exemple, le symbole du dollar ($) aux États-Unis devenait celui de la livre (£) au Royaume-Uni : dégâts assurés !
-
-Il y a bien eu des tentatives de stopper la multiplication des pages de code, mais globalement elles ont été insuffisantes.
-En 1972, la norme <lien type="wikipedia" url="ISO 646">ISO 646</lien> a défini une page de code sur 7 bits dérivant de l’ASCII, avec des caractères fixes (principalement les lettres majuscules et minuscules, les chiffres et la ponctuation principale), les autres caractères étant laissés au choix. Cette norme, qui devait permettre une certaine compatibilité et un semblant d’ordre, a donné naissance à un certain nombre de pages de code nationales, mais elle n’était pas adaptée aux langues autres que latines et ne permettait pas de représenter assez de caractères.
-
-
-<titre2>ISO 8859 : 8 bits pour les langues latines</titre2>
-
-Plus tard, une norme mieux pensée a fait son apparition : la norme <gras><couleur nom="orange">ISO 8859</couleur></gras>. Cette fois, elle utilise <gras>8 bits donc 256 caractères au maximum</gras>. Le standard ISO 8859 comporte en fait plusieurs « parties », c’est-à-dire des pages de code indépendantes, nommées ISO 8859-<italique>n</italique> où <italique>n</italique> est le numéro de la partie.
-ISO 8859 a été pensée afin que les parties soient le plus largement compatibles entre elles. Ainsi, elle englobe l’ASCII (codes 0 à 127) comme base commune, et les codes 128 à 255 devaient accueillir les caractères propres à chaque page de code, en s'arrangeant pour que des caractères identiques ou proches d’une page à l’autre occupent le même code.
-
-Ce standard a principalement servi aux langues latines d’Europe pour mettre au point une page de code commune. À elles seules, elles utilisent finalement 10 parties d’ISO 8859, parfois appelées <italique>latin-1</italique>, <italique>latin-2</italique>, etc. ; ces parties correspondent à des évolutions dans la page de code latine de base (<italique>latin-1</italique>, ou officiellement ISO 8859-1) afin de rajouter certains caractères pour compléter des langues. En voici deux que vous devriez connaître :<liste><puce><gras>ISO 8859-1 (<italique>latin-1</italique> ou « <italique>Occidental</italique> »)</gras> est un encodage très courant dans les pays latins et sur la toile. C’est en effet celui qu’utilisent Linux et de nombreux documents et pages web. Les systèmes Windows utilisent également un jeu proche, comme on le verra bientôt. Il a l’avantage de permettre d’écrire <italique>grosso modo</italique> toutes les langues latines, et ceci avec des caractères d’un octet seulement.</puce><puce><gras>ISO 8859-15 (<italique>latin-9</italique> ou « <italique>Occidental (euro)</italique> »)</gras>, datant de 1998, introduit le signe de l’euro (€) et complète le support de quelques langues dont le français (avec Œ) en abandonnant des symboles peu utilisés (dont le mystérieux ¤ signifiant « monnaie »). Il est néanmoins peu utilisé par rapport à son grand frère ci-dessus.</puce></liste>
-<position valeur="centre"><tableau><legende>Table des caractères ISO 8859-1 (<italique>latin-1</italique>)
-et ISO 8859-15 (<italique>latin-9</italique>, caractères indiqués <couleur nom="vertf"><gras>en vert</gras></couleur> si différents)</legende><ligne><entete> </entete><entete>  0  </entete><entete>  1  </entete><entete>  2  </entete><entete>  3  </entete><entete>  4  </entete><entete>  5  </entete><entete>  6  </entete><entete>  7  </entete><entete>  8  </entete><entete>  9  </entete><entete>  A  </entete><entete>  B  </entete><entete>  C  </entete><entete>  D  </entete><entete>  E  </entete><entete>  F  </entete></ligne><ligne><entete>00
-
-
-
-⋮
-
-
-
-70</entete><cellule fusion_col="16"><gras>ASCII</gras>
-<italique>(sauf les caractères de contrôle, non utilisés)</italique></cellule></ligne><ligne><entete>80</entete><cellule fusion_lig="2" fusion_col="16"><italique>non utilisé</italique></cellule></ligne><ligne><entete>90</entete></ligne><ligne><entete>A0</entete><cellule><touche><italique>NBSP</italique></touche></cellule><cellule>¡</cellule><cellule>¢</cellule><cellule>£</cellule><cellule>¤ <couleur nom="vertf"><gras>€</gras></couleur></cellule><cellule>¥</cellule><cellule>¦ <couleur nom="vertf"><gras>Š</gras></couleur></cellule><cellule>§</cellule><cellule>¨ <couleur nom="vertf"><gras>š</gras></couleur></cellule><cellule>©</cellule><cellule>ª</cellule><cellule>«</cellule><cellule>¬</cellule><cellule>-</cellule><cellule>®</cellule><cellule>¯</cellule></ligne><ligne><entete>B0</entete><cellule>°</cellule><cellule>±</cellule><cellule>²</cellule><cellule>³</cellule><cellule>´ <couleur nom="vertf"><gras>Ž</gras></couleur></cellule><cellule>µ</cellule><cellule>¶</cellule><cellule>·</cellule><cellule>¸ <couleur nom="vertf"><gras>ž</gras></couleur></cellule><cellule>¹</cellule><cellule>º</cellule><cellule>»</cellule><cellule>¼ <couleur nom="vertf"><gras>Œ</gras></couleur></cellule><cellule>½ <couleur nom="vertf"><gras>œ</gras></couleur></cellule><cellule>¾ <couleur nom="vertf"><gras>Ÿ</gras></couleur></cellule><cellule>¿</cellule></ligne><ligne><entete>C0</entete><cellule>À</cellule><cellule>Á</cellule><cellule>Â</cellule><cellule>Ã</cellule><cellule>Ä</cellule><cellule>Å</cellule><cellule>Æ</cellule><cellule>Ç</cellule><cellule>È</cellule><cellule>É</cellule><cellule>Ê</cellule><cellule>Ë</cellule><cellule>Ì</cellule><cellule>Í</cellule><cellule>Î</cellule><cellule>Ï</cellule></ligne><ligne><entete>D0</entete><cellule>Ð</cellule><cellule>Ñ</cellule><cellule>Ò</cellule><cellule>Ó</cellule><cellule>Ô</cellule><cellule>Õ</cellule><cellule>Ö</cellule><cellule>×</cellule><cellule>Ø</cellule><cellule>Ù</cellule><cellule>Ú</cellule><cellule>Û</cellule><cellule>Ü</cellule><cellule>Ý</cellule><cellule>Þ</cellule><cellule>ß</cellule></ligne><ligne><entete>E0</entete><cellule>à</cellule><cellule>á</cellule><cellule>â</cellule><cellule>ã</cellule><cellule>ä</cellule><cellule>å</cellule><cellule>æ</cellule><cellule>ç</cellule><cellule>è</cellule><cellule>é</cellule><cellule>ê</cellule><cellule>ë</cellule><cellule>ì</cellule><cellule>í</cellule><cellule>î</cellule><cellule>ï</cellule></ligne><ligne><entete>F0</entete><cellule>ð</cellule><cellule>ñ</cellule><cellule>ò</cellule><cellule>ó</cellule><cellule>ô</cellule><cellule>õ</cellule><cellule>ö</cellule><cellule>÷</cellule><cellule>ø</cellule><cellule>ù</cellule><cellule>ú</cellule><cellule>û</cellule><cellule>ü</cellule><cellule>ý</cellule><cellule>þ</cellule><cellule>ÿ</cellule></ligne></tableau></position>
-<information><position valeur="justifie">Le caractère <touche><italique>NBSP</italique></touche> (<taille valeur="tpetit">0x</taille>A0) est l’espace insécable (<italique>non-breaking space</italique>), c’est-à-dire une espace qui, contrairement à l’espace habituelle, ne « sépare » pas les mots. Ça veut dire que si vous écrivez « Bonjour ! » avec une espace insécable et que ça se retrouve à la fin d'une ligne d'affichage, le « Bonjour » ne sera pas séparé du point d’exclamation (ils iront ensemble au début de la ligne suivante) contrairement à une espace simple. Ce caractère est surtout utilisé avec les signes de ponctuation (avant « ? », « ! », « ; », « : » et entre les guillemets “«” et “»”). Ce sont les espaces bizarres qui apparaissent en gris dans OpenOffice. ;)</position></information>
-À nouveau un exemple, avec cette fois des caractères accentués et autres (oui, je suis poète) :
-<citation nom="Texte à encoder">« Ô âme oubliée ! »</citation>
-<code type="texte encodé en latin-1">texte :             «  ▒  Ô     â  m  e     o  u  b  l  i  é  e  ▒  !  ▒  »  valeur en latin-1 : AB A0 D4 20 E2 6D 65 20 6F 75 62 6C 69 E9 65 A0 21 A0 BB</code>Notez l’emploi d’espaces insécables (symbolisés par ▒ pour qu’on les voit) avant le point d’exclamation et entre les guillemets, conformément aux règles typographiques. :)
-
-Les codes de <taille valeur="tpetit">0x</taille>00 à <taille valeur="tpetit">0x</taille>1F et <taille valeur="tpetit">0x</taille>7F (les caractères de contrôle ASCII) et de <taille valeur="tpetit">0x</taille>80 à <taille valeur="tpetit">0x</taille>9F sont laissés inutilisés par le standard ISO 8859. Pour les communications Internet, l’<lien type="wikipedia">IANA</lien> a créé la norme ISO-8859 (attention, c'est le tiret qui change tout !). Celle-ci reprend toute la norme ISO 8859 et y rajoute des caractères de contrôle aux emplacements libres.
-
-Windows s’est aussi basé sur <italique>latin-1</italique> pour mettre au point son nouveau jeu de caractères occidental dans les années 1990. <gras><lien type="wikipedia">Windows-1252</lien></gras> (ou <italique>CP1252</italique>, parfois dit <italique>ANSI</italique> à titre officieux) est maintenant le jeu utilisé dans les systèmes Windows occidentaux (donc probablement chez vous), et remplace les anciennes pages de code (la <lien type="wikipedia" url="page de code 437">page de code 437</lien> pour les États-Unis, et la <lien type="wikipedia" url="page de code 850">850</lien> pour l’Europe). Il reprend tous les caractères d’ISO 8859-1 et utilise les codes libres (de <taille valeur="tpetit">0x</taille>80 à <taille valeur="tpetit">0x</taille>9F) pour des caractères supplémentaires.
-
-
-<information><position valeur="justifie">Sous Windows, vous pouvez insérer n’importe quel caractère de Windows-1252 (donc de <italique>latin-1</italique> et d’ASCII) avec la combinaison <touche>Alt</touche>+<touche>0</touche><touche><italique>num</italique></touche> où <italique>num</italique> est le code du caractère en décimal — notez qu’il faut bien entrer un chiffre zéro au début, sinon, vous obtiendrez un caractère de la vieille page de code de votre système (850 ou 437).
-Les exemples les plus courants pour le français :<liste><puce><touche>Alt</touche>+<touche>0</touche><touche>1</touche><touche>9</touche><touche>2</touche> → <gras>À</gras></puce><puce><touche>Alt</touche>+<touche>0</touche><touche>1</touche><touche>9</touche><touche>9</touche> → <gras>Ç</gras></puce><puce><touche>Alt</touche>+<touche>0</touche><touche>2</touche><touche>0</touche><touche>1</touche> → <gras>É</gras></puce><puce><touche>Alt</touche>+<touche>0</touche><touche>1</touche><touche>6</touche><touche>0</touche> (ou <touche>Alt</touche>+<touche>2</touche><touche>5</touche><touche>5</touche>) → <italique>espace insécable</italique></puce><puce><touche>Alt</touche>+<touche>0</touche><touche>1</touche><touche>7</touche><touche>1</touche> (ou <touche>Alt</touche>+<touche>1</touche><touche>7</touche><touche>4</touche>) → <gras><taille valeur="gros">«</taille></gras></puce><puce><touche>Alt</touche>+<touche>0</touche><touche>1</touche><touche>8</touche><touche>7</touche> (ou <touche>Alt</touche>+<touche>1</touche><touche>7</touche><touche>5</touche>) → <gras><taille valeur="gros">»</taille></gras></puce></liste>
-Sous Ubuntu, le clavier est plus complet et la touche <touche>AltGr</touche>, utilisée en combinaison avec les autres touches (et <touche>Maj</touche>), permet d’accéder à de nombreux caractères. Je vous laisse chercher !
-
-À partir de maintenant, je vous interdit de massacrer le français ! :pirate: <taille valeur="tpetit">D’ailleurs, voici <lien url="http://www.siteduzero.com/tutoriel-3-454279-l-orthotypographie-bien-ecrire-pour-bien-etre-lu.html">un cours sur la typographie</lien> si ça vous intéresse, et arrêtons-là le hors-sujet, voulez-vous ?</taille></position></information>
-
-ISO 8859 a aussi été utilisé pour l’alphabet cyrillique (ISO 8859-5), l’arabe (ISO 8859-6), le grec (7) l’hébreu (8) et même le thaï (11).
-
-Il existe au total 16 parties et il n’y en aura pas plus. En effet, on privilégie désormais le développement de l’Unicode.
-
-
-<titre2>ISO 2022 : du multi-octet pour les langues asiatiques</titre2>
-<italique>Pendant ce temps-là, en Asie…</italique>
-
-Les langues latines s’en sont plutôt bien sorties finalement. Elles ont réussi à ne pas dépasser la limite fatidique de l’octet, ce qui restait quand même le plus pratique pour les traitements (et la consommation mémoire). Mais les langues asiatiques comme le japonais, le coréen ou le chinois disposent de bien trop de caractères pour que tout tienne sur 8 bits. Les encodages mis au point en Asie de l'Est ont donc franchi le saut du <gras>multi-octet</gras>. Certains utilisaient 2 octets, ce qui permet 65 536 (2<exposant>16</exposant>) codes différents.
-
-Comme pour les langues latines, un standard a été mis au point pour les organiser, on l’appelle <gras><couleur nom="orange">ISO 2022</couleur></gras>. C’est un concept un peu spécial. Il permet de jongler entre plusieurs pages de code à l’aide de « séquences d’échappement » codées sur 3 octets (parfois 4) et commençant par le caractère ASCII <touche><couleur nom="bleu">ESC</couleur></touche> (0x1B) ; celles-ci indiquent aux programmes quelle page de code il faut utiliser pour interpréter ce qui suit. Les différentes pages de codes sont totalement indépendantes et peuvent utiliser un octet ou deux par caractère.
-
-ISO 2022 a été utilisé pour le chinois (ISO 2022-CN), le coréen (ISO 2022-KR) et le japonais (ISO 2022-JP). Ces encodages, surtout le japonais, restent encore très répandus même si l’Unicode se développe.
-
-
-
-</position>]]>
-	</texte>
-      </souspartie>
-    
-      <souspartie id="599784">
-	<titre>
-	  <![CDATA[Unicode, la solution ultime]]>
-	</titre>
-	<texte>
-	  <![CDATA[<position valeur="justifie">Avec des normes comme ISO 8859 ou ISO 2022, on commençait à s’en tirer pas trop mal. Les problèmes sont atténués, mais subsistent (et si vous rédigez un document en français mais voulez y insérer de l’arabe ?). Finalement, des illuminés se sont dit : « Et si on créait un jeu de caractères unique pour tout le monde ? » De cette idée toute simple sont nés deux monuments : le standard ISO 10646 et Unicode.
-
-
-
-<titre1>Le Jeu universel de caractères</titre1>
-
-<gras><couleur nom="orange">ISO 10646</couleur></gras> voit le jour en 1990. Il s’agit du <gras>Jeu universel de caractères</gras> ou JUC (en anglais, <italique>UCS</italique> pour <italique>Universal Character Set</italique>). Celui-ci a été pensé pour pouvoir accueillir n’importe quel caractère existant de n’importe quelle langue du monde. Un travail titanesque ! Concrètement, c’est un bête jeu de caractères, sauf que celui-ci offre pas moins de 2<exposant>21</exposant> = 2 097 152 codes ! À l’origine, il allait même jusqu’à 2<exposant>32</exposant> = 4 294 967 296, mais il a rapidement été restreint : c’est déjà bien suffisant.
-
-Actuellement, environ 17% des codes sont déjà attribués à des caractères. Comme vous le voyez, il nous reste encore de la place à revendre. Et pourtant, dans ces 17%, on a tout mis ou presque : les caractères de tous les anciens jeux, tous les alphabets modernes, pléthore de symboles…
-Le JUC n’est peut-être pas la solution définitive et éternelle (en informatique, il ne faut jamais dire « jamais »), mais il s’en rapproche suffisamment pour qu’on dorme sur nos deux oreilles pendant le siècle à venir. :)
-
-<secret>Devant une telle quantité, les polices d’écriture (qui n’ont rien à voir avec les encodages, il s’agit ici d’<gras>affichage</gras> des caractères et non de leur <gras>codage</gras> en mémoire) peinent à suivre. C’est ce qui explique les petits symboles du type <image>http://uploads.siteduzero.com/files/360001_361000/360100.png</image> que vous pouvez voir avec un peu de chance sur certaines pages (si vous regardez bien, vous constaterez que dans le carré est inscrit le code hexadécimal du caractère). ;) Généralement, les auteurs de polices se contentent de créer les glyphes des parties qui les intéressent (et éventuellement recopient les glyphes de référence pour le reste) ; si vous avez vraiment besoin de rédiger une partition suivant la <lien type="wikipedia" url="Table des caractères Unicode/U1D200">notation musicale grecque ancienne</lien> avec le JUC, vous utiliserez une police spécialisée.</secret>
-Bon à savoir : par commodité et souci de compatibilité, le JUC reprend ISO-8859-1 (<italique>latin-1</italique> avec les caractères de contrôle) pour ses 256 premiers caractères (donc inclut également l’ASCII).
-Ce jeu n’est pas définitif : de nombreux caractères sont régulièrement créés et assignés à des codes encore libres. Rassurez-vous, les caractères déjà en place ne bougent plus.
-
-
-<flottant valeur="droite"><italique><image legende="logo d’Unicode" legendevisible="oui">http://uploads.siteduzero.com/thb/393001_394000/393504.jpg</image></italique></flottant>
-<titre1>Unicode</titre1>
-
-<gras><couleur nom="orange">Unicode</couleur></gras> est une norme développée par le <lien url="http://www.unicode.org/">Consortium Unicode</lien> publiée pour la première fois en 1991 (en 2011, elle en est à la version 6.1). On peut la voir comme une surcouche (une extension) d’ISO 10646. En fait, les deux normes sont développées parallèlement et synchronisées en permanence. Là où ISO 10646 liste simplement les caractères du jeu et leur assigne un nom et un code, Unicode va plus loin en leur ajoutant des attributs et en décrivant des relations entre eux (donc en leur donnant un sens). C’est un peu complexe et pas forcément intéressant ici, donc je ne m’étendrai pas dessus.
-
-<information><position valeur="justifie">Au fait, il y a une notation officielle pour désigner n’importe quel caractère Unicode : <gras>U+<italique>xxxx</italique></gras>, où <italique>xxxx</italique> est le code hexadécimal (jusqu’à 6 chiffres). Par exemple, U+0041 correspond à la lettre A majuscule, U+23CF au symbole ⏏…
-
-Une astuce : Certaines distributions Linux offrent le raccourci <touche>Ctrl</touche>+<touche>Shift</touche>+<touche>U</touche>+<touche><italique>code</italique></touche> pour insérer directement n’importe quel caractère Unicode dont vous spécifiez le code hexadécimal.</position></information>
-Unicode, c’est cependant plus que cela. Ce standard décrit également des algorithmes de traitement, notamment pour la gestion des différents sens d’écriture, et surtout, ce qui nous intéresse ici, des encodages permettant de transcrire le <acronyme valeur="Jeu Universel de Caractères, ne m’obligez pas à le répéter !">JUC</acronyme>.
-
-
-<titre2>Un jeu, des encodages</titre2>
-
-<question><position valeur="justifie">Des encodages ? Mais, euh… Je croyais qu’Unicode était un encodage ?</position></question>
-Unicode est basiquement un <gras>jeu de caractères</gras> (un ensemble de caractères auxquels on attribue à chacun un point de code unique) et non un <gras>encodage</gras> (façon de représenter ce point de code en mémoire). C’est ici que la distinction prend tout son sens. Auparavant, les deux se confondaient puisque tous les jeux de caractères étaient associés à un encodage simple : vu que leur codes tenaient sur un ou deux octets, on se contentait de les écrire tels quels en mémoire.
-
-Or, les points de codes d’Unicode nécessitent beaucoup plus qu’un octet : il leur en faudrait quatre ! Cela voudrait dire que si l’on continuait à faire comme avant, on utiliserait 4 fois plus de mémoire qu’avec nos jeux précédents tenant sur un octet, comme ISO 8859.<secret>Des petits malins me diront que trois octets suffiraient car on aurait alors 3×8=24 bits disponibles ; c’est vrai maintenant que le jeu a été réduit à 2<exposant>21</exposant> codes, mais en informatique, pour des raisons techniques, on préfère des tailles multiples de 2.</secret>
-Ce serait un gaspillage de mémoire trop important, d’autant plus qu’il paraîtrait inutile. En effet, il y aurait plein d’octets qui vaudraient zéro :
-
-<tableau><legende>Tableau pour mieux visualiser le problème
-(les codes sont en binaire, les <minicode>b</minicode> symbolisent les bits occupés)</legende><ligne><entete>Codes</entete><entete>Encodage selon UTF-32</entete><entete>Caractères disponibles dans cet intervalle</entete></ligne><ligne><cellule>jusqu’à U+00FF (2<exposant>8</exposant>-1)</cellule><cellule><minicode type="c">00000000 00000000 00000000 bbbbbbbb</minicode></cellule><cellule>langues occidentales (<italique>latin-1</italique>)</cellule></ligne><ligne><cellule>jusqu’à U+FFFF (2<exposant>16</exposant>-1)</cellule><cellule><minicode type="c">00000000 00000000 bbbbbbbb bbbbbbbb</minicode></cellule><cellule>la plupart des alphabets actuellement
-utilisés dans le monde</cellule></ligne><ligne><cellule>jusqu’à U+10FFFF (2<exposant>21</exposant>-1)</cellule><cellule><minicode type="c">00000000 000bbbbb bbbbbbbb bbbbbbbb</minicode></cellule><cellule>n’importe quel caractère</cellule></ligne></tableau>
-Vous le voyez, il y aurait toujours au moins un octet nul. Le cas extrême est celui d’un Occidental qui gaspille 3 octets par caractère.
-
-<information><position valeur="justifie">Pour information, cet encodage existe tout de même, il est nommé <couleur nom="orange"><gras>UTF-32</gras></couleur>, mais est rarement employé (mis à part par quelques programmes en interne, car il reste plus facile à traiter que ses confrères que nous allons voir).</position></information>
-
-<titre2>UTF-16</titre2>
-
-Pour faire des économies, on a donc mis au point des encodages plus futés. Tout d’abord, il y a l’<couleur nom="orange"><gras>UTF-16</gras></couleur> (<italique>UCS transformation format</italique>, 16 bits). Celui-ci code les 2<exposant>16</exposant> = 65 536 premiers caractères sur 2 octets, et les codes supérieurs sont représentés sur 4 octets par le biais d’une petite transformation mathématique. Le 16 dans son nom indique le nombre minimal de bits nécessaires pour un caractère.
-Les caractères de cet encodage ne font donc pas tous la même taille, ce qui complique un poil les traitements (même s’il est facile de distinguer un caractère sur 2 octets d’un caractère sur 4).
-
-De plus, on a une difficulté technique supplémentaire pour l’UTF-16 (et l’UTF-32) : le <lien type="wikipedia">boutisme</lien> (<italique>endianness</italique>). Ce terme mystique désigne l’ordre dans lequel sont « rangés » les octets d’un nombre multi-octet. Il en existe deux sortes principales : le <gras>gros boutisme</gras> (<italique>big-endian, BE</italique>) et le <gras>petit boutisme</gras> (<italique>little-endian, LE</italique>).
-Le problème, c’est que le boutisme dépend des machines et que ces deux-là sont très répandus. Or en UTF-16 on lit les données par groupes de 2 octets, donc le boutisme influe sur le résultat : si l’on lit du texte UTF-16 envoyé par quelqu’un utilisant un boutisme différent du sien, c’est l’erreur assurée !
-Pour pallier à cela, on utilise parfois un caractère spécial appelé BOM (<italique>byte order mask</italique>, marque d’ordonnancement des octets). l’IANA a aussi autorisé deux déclinaisons de l’encodage pour les communications Internet qui permettent de préciser le boutisme employé : <italique>UTF-16BE</italique> et <italique>UTF-16LE</italique>.
-
-Reprenons le texte d’exemple de tout à l’heure et encodons-le cette fois en UTF-16 :
-<citation nom="Texte à encoder">« Ô âme oubliée ! »</citation>
-<code type="texte encodé en UTF-16 (gros boutiste)">texte :             «____ ▒____ Ô____  ____ â____ m____ e____  ____ o____ u____ b____ l____ i____ é____ e____ ▒____ !____ ▒____ »____valeur en UTF-16 :  00-AB 00-A0 00-D4 00-20 00-E2 00-6D 00-65 00-20 00-6F 00-75 00-62 00-6C 00-69 00-E9 00-65 00-A0 00-21 00-A0 00-BB</code>Remarquez que ce texte en UTF-16 s’encode exactement comme en <italique>latin-1</italique>, avec des valeurs sur 2 octets au lieu d’un (donc un octet sur deux valant 0). On occupe donc deux fois plus de mémoire.
-
-
-<titre2>UTF-8</titre2>
-
-On a aussi inventé l’<couleur nom="orange"><gras>UTF-8</gras></couleur>. La taille des caractères codés est encore plus variable, et l’économie de mémoire plus grande. Comme vous l’avez deviné, le nombre minimal de bits est 8. En fait, il représente les premiers caractères (ceux de l’ASCII) sur un octet, les suivants sur 2 octets, 3 et jusqu’à 4 octets.
-
-En plus, cet encodage est compatible avec l’ASCII : les caractères sont codés exactement de la même manière en UTF-8 et en ASCII. Ajoutez à cela que l’encodage a été conçu afin que certains algorithmes de traitement (comparaison de texte par exemple) soient réutilisables sans modification. Ainsi, de vieux programmes qui n’ont pas été conçus pour un autre encodage que l’ASCII fonctionneront aussi si on leur passe du texte en UTF-8 : magique !
-Enfin, contrairement à l’UTF-16, on n’a pas de problème de boutisme puisqu’on lit les données octet par octet. :)
-
-Bref, UTF-8 a de nombreux avantages (économie de mémoire, compatibilité, boutisme, résistance aux erreurs…). Un défaut aussi : la grande variabilité de taille des caractères qui rend les traitements plus compliqués et moins performants. Il n’empêche que ses point forts lui ont assuré un grand succès : il est sans doute l’encodage le plus répandu aujourd’hui. Il est utilisé pour les documents et les communications, et les systèmes d’exploitation (Mac et GNU/Linux) s’y mettent aussi.
-
-Pour ne pas changer, exemple de texte en UTF-8 :
-<citation nom="Texte à encoder">« Ô âme oubliée ! »</citation>
-<code type="texte encodé en UTF-8">texte :             «____ ▒____ Ô____    â____ m  e     o  u  b  l  i  é____ e  ▒____ !  ▒____ »____valeur en UTF-8 :   C2-AB C2-A0 C3-94 20 C3-A2 6D 65 20 6F 75 62 6C 69 C3-A9 65 C2-A0 21 C2-A0 C2-BB</code>Constat flagrant, la consommation de mémoire est singulièrement réduite par rapport à UTF-16. :D On voit de plus que les caractères de base sont codés exactement comme en ASCII, et les caractères supérieurs s’étendent sur plusieurs octets (ici symbolisés par « <minicode>__</minicode> »). Ici, vu qu’on reste dans les caractères latins, ça ne dépasse jamais deux octets, mais ça peut aller jusqu’à 4.
-
-
-
-</position>]]>
-	</texte>
-      </souspartie>
-    
-      <souspartie id="682522">
-	<titre>
-	  <![CDATA[Et aujourd’hui ?]]>
-	</titre>
-	<texte>
-	  <![CDATA[<position valeur="justifie"><italique>Hop</italique>, notre périple au fil des âges, sur la piste des encodages, nous a ramené au temps présent ! ASCII, ISO 8859, UTF-8… Il est grand temps de dresser le bilan. Que retenir de tout ça ?<liste>	<puce>Le principe du stockage de texte en informatique : jeux de caractères et encodages (bien retenir la distinction).</puce><puce>Qu’un caractère <souligne>n’est pas</souligne> un octet. Ni même un nombre fixe d’octets. Programmeurs, fourrez-vous ça dans le crâne et tenez-le vous pour dit.</puce><puce>Les principaux encodages : ASCII, ISO 8859-1, UTF-8, pour n’en donner que trois.</puce><puce>Leurs usages actuels.</puce></liste>
-<titre2>Les encodages actuels</titre2>
-
-On va tout de suite détailler le dernier point !
-
-Avant l’apparition d’Unicode, les systèmes d’exploitation fonctionnaient avec un système de pages de code régionales, c’est-à-dire qu’on utilisait des variantes d’encodage sur 8 bits en fonction du pays. Depuis, ils ont migré vers Unicode en interne (y compris Windows, depuis XP, même si ça ne se répercute par forcément pour l’utilisateur).<liste>	<puce>Sous <gras><couleur nom="bleu">Windows</couleur></gras>, <gras>UTF-16</gras> (<italique>little endian</italique>) est maintenant utilisé en interne et UTF-8 est également supporté, mais par compatibilité Unicode cohabite avec les pages de code. Ces dernières, incorrectement appelées « ANSI » et proches des ISO 8859, sont encore fréquemment utilisées. Je vous rappelle que celle pour nous autres occidentaux (Europe de l’Ouest et Amérique du Nord) est <gras>Windows-1252</gras> (« CP1252 ») et dérive de <italique>latin-1</italique>. Celles-ci ont remplacé les anciennes pages de code dites « OEM » (<lien type="wikipedia">CP437</lien> et <lien type="wikipedia">CP850</lien> pour l’Occident), dont l’usage demeure toutefois pour la console.
- </puce>	<puce>Sous <gras><couleur nom="bleu">Mac OS</couleur></gras>, l’encodage en vigueur en Occident était nommé <lien type="wikipedia"><gras>MacRoman</gras></lien>, mais depuis Mac OS X on utilise <gras>UTF-8</gras>.
- </puce>	<puce>Les distributions <gras><couleur nom="bleu">GNU/Linux</couleur></gras> utilisaient <gras><italique>latin-1</italique></gras> par défaut. Certaines l’utilisent toujours, tandis que les autres adoptent progressivement <gras>UTF-8</gras> (maintenant majoritaire).</puce></liste>
-<information><position valeur="justifie">Remarque : Sous Windows, vous pouvez changer la page de code en vigueur en allant dans le Panneau de Configuration, « Options régionales et linguistiques », onglet « Avancé ». C’est présenté comme un choix de la langue par défaut des programmes, mais c’est bien les pages de code qui se cachent derrière. ;)
-
-Par ailleurs, il est également possible de changer temporairement la page de code d’une console Windows. Pour cela, il y a la commande <acronyme valeur="CHange CodePage"><minicode type="console">CHCP n</minicode></acronyme>, où <italique>n</italique> est le nº de la page de code à utiliser (1252 pour Windows-1252). Sans paramètre, cette commande affiche l’encodage actuel de la console (probablement 437 ou 850).</position></information>
-
-Il est bien sûr possible, avec les bons outils, d’encoder un fichier de n’importe quelle façon, sous n’importe quel système d’exploitation. L’encodage utilisé par un OS est celui utilisé par défaut dans le fonctionnement des programmes. Les outils intégrés à un OS (la console de Windows, par exemple) ou fournis avec auront donc une préférence pour cet encodage. Cela influe donc sur l’encodage des documents (puisqu’un utilisateur de base ne s’en souciera pas).
-
-De plus, UTF-8 est devenu l’un des encodages les plus utilisés sur <gras><couleur nom="bleu">la Toile</couleur></gras> (pour les pages Web), ce qui semble logique puisqu’il s’agit d’un réseau international mettant en contact toutes les langues. L’autre principal encodage sur Internet reste <italique>latin-1</italique>.
- 
-
-Comme vous voyez, l’ASCII seul n’est plus employé, mais tous les encodages répandus conservent la base ASCII par compatibilité. Les trois principaux, cités ci-dessus, se basent même tous sur <italique>latin-1</italique> (même si l’UTF-8 n’est pas compatible avec ce dernier puisqu’un codet de 8 bits sera encodé sur 2 octets).
-
-
-<titre2>Détection de l’encodage</titre2>
-
-Un problème posé par la diversité des encodages existants est la détermination de l’encodage utilisé par un fichier. Les renseignements associés à un fichier particulier (sa date de création par exemple) n’indiquent rien sur son encodage. On doit donc tenter de le « deviner », au moyen d’algorithmes compliqués qui analysent le contenu du fichier. Ces algorithmes sont efficaces la plupart du temps, mais <lien type="wikipedia" url="Bush hid the facts" langue="en">peuvent échouer</lien>, et sont compliqués.
-C’est ce qui explique les affichages bizarres de certains fichiers ou pages web : le programme n’a pas réussi à déterminer le bon encodage.
-
-Un moyen plus simple serait d’inclure cette indication directement dans le contenu du fichier, au tout début (afin de diminuer les risques de perturbation). On utilise pour cela le fait que tous les encodages actuels soient compatibles avec l’ASCII. C’est ce qu’on verra tout à l’heure pour les pages HTML.
-
-
-
-</position>]]>
-	</texte>
-      </souspartie>
-    
-      <souspartie id="696161">
-	<titre>
-	  <![CDATA[En pratique : jongler avec les encodages !]]>
-	</titre>
-	<texte>
-	  <![CDATA[<position valeur="justifie">
-Vous n’êtes pas lassé de toutes ces connaissances à ingurgiter ? Rassurez-vous, on va s’arrêter là pour pratiquer un peu. :) Il est important de savoir tout ça, mais c’est encore mieux de savoir le mettre à profit !
-
-
-
-<titre1>Manipuler des documents</titre1>
-
-Lorsqu’on consulte un document, que ce soit un fichier texte (code source par exemple) ou une page web, il faut la lire avec le bon encodage. Sinon, les valeurs seront mal interprétées. Exemple ?
-
-Voici un texte encodé en <gras>UTF-8</gras> :<citation nom="Texte encodé en UTF-8">Bonjour, amis Zéros !</citation>
-Si vous le lisez en <gras><italique>latin-1</italique></gras>, vous obtiendrez ceci :<citation nom="Texte encodé en UTF-8 mais interprété comme du latin-1">Bonjour, amis ZÃ©ros !</citation>
-Splendide, non ? Ça doit vous rappeler des souvenirs. ^^
-Pourquoi ce résultat ? Souvenez-vous qu’UTF-8 encode certains caractères, dont les lettres accentuées, sur deux octets ; ici la lettre « é » donne les octets 0xC3 et 0xA9. Or, <italique>latin-1</italique> encode tous ses caractères sur un octet. Les octets 0xC3 et 0xA9 sont donc interprétés séparément, et donnent les caractères « Ã » et « © », respectivement.
-Notez que tous les autres caractères sont lus correctement, car ils appartiennent à la base commune ASCII. Vous voyez maintenant l’intérêt de cette compatibilité : même avec un mauvais encodage, le texte reste globalement lisible.
-
-Le problème se pose même si tous les caractères font la même taille dans les deux encodages, une même valeur pouvant désigner deux caractères différents d’un encodage à l’autre.
-
-
-<titre2>Consulter une page web (avec un navigateur)</titre2>
-
-La plupart du temps, vous n’aurez pas à vous soucier de l’encodage pour lire une page web. Normalement, celui-ci est en effet précisé dans le code source. Il arrive toutefois que ce ne soit pas fait, ou mal fait, et que votre navigateur (Internet Explorer, Firefox…) échoue à le deviner. Par exemple :
-<position valeur="centre"><italique><image legende="Exemple de page web lue (avec Firefox) avec un mauvais encodage − exemple bien sûr simulé !" legendevisible="oui">http://uploads.siteduzero.com/files/392001_393000/392703.png</image></italique></position>
-C’est moche. C’est désagréable à lire. Heureusement, vous pouvez y remédier manuellement. Tout navigateur qui se respecte offre un menu permettant de jongler entre les encodages. Vous devriez trouver sans trop de difficultés. Pour Firefox par exemple, il est caché dans le menu « Affichage » :
-<position valeur="centre"><italique><image legende="Menu des encodages dans Firefox" legendevisible="oui">http://uploads.siteduzero.com/files/392001_393000/392705.png</image></italique></position>
-Pour l’instant, par défaut, le navigateur est en « détection automatique », ce qui a conduit à l’utilisation incorrecte d’ISO-8859-1 (<italique>latin-1</italique>). On peut en changer. Ici, la page est probablement en UTF-8 (ça ressemble à l’erreur qu’on a vue en introduction), donc on essaie cet encodage. On choisit l’option correspondante dans le menu, et…
-<position valeur="centre"><italique><image legende="Tadaam !" legendevisible="oui">http://uploads.siteduzero.com/files/392001_393000/392706.png</image></italique></position>
-La page s’affiche correctement. Vous avez fait du beau boulot. :)
-
-
-<titre2>Travailler sur un fichier (avec un éditeur de texte)</titre2>
-
-On va maintenant voir comment gérer l’encodage de nos fichiers. Tout éditeur de texte qui mérite d’être appelé ainsi nous permet de le faire de façon précise.
-Commençons par un cas d’école : le Bloc-Notes de Windows. Si vous êtes sous Windows, ouvrez le Bloc-Notes, tapez un peu de texte avec des accents, puis enregistrez.
-<position valeur="centre"><italique><image legende="Boîte de dialogue d’enregistrement du Bloc-Notes, avec choix de l’encodage" legendevisible="oui">http://uploads.siteduzero.com/files/392001_393000/392787.png</image></italique></position>
-Comme vous voyez, le Bloc-Notes permet au premier enregistrement de choisir l’encodage du fichier. Le choix est assez limité cependant : « ANSI » (Windows-1252, l’encodage par défaut sous Windows, je vous le rappelle), « Unicode » et « Unicode <italique>big endian</italique> » (qui désignent en fait l’UTF-16 avec les deux boutismes possibles), ou UTF-8.
-<taille valeur="tpetit">Comme exercice, vous pouvez vous amuser à vérifier que les tailles des fichiers affichées sur ma capture sont correctes, sachant que mon texte comporte 15 caractères et que le Bloc-Notes rajoute automatiquement une <acronyme valeur="Byte Order Mark, souvenez-vous…">BOM</acronyme> pour tous les encodages Unicode (qui fait 2 octets en UTF-16 et 3 octets en UTF-8).</taille>
-
-Le Bloc-Notes est vraiment un éditeur très basique, et ses fonctionnalités sont limitées. Ainsi on ne peut pas choisir le <italique>latin-1</italique> par exemple. De plus, rien n’indique l’encodage du fichier sur lequel on travaille, et on ne peut pas en changer après coup.
-
-Si vous faites de la programmation ou autre, vous utilisez certainement un éditeur plus avancé (je l’espère pour vous). Comme les navigateurs web, la plupart incluent un menu pour passer d’un encodage à un autre. Toujours sous Windows, voici l’exemple de <lien url="http://notepad-plus-plus.org/fr/">Notepad++</lien> (ici j’ai rouvert les fichiers que je viens de créer avec le Bloc-Notes) :
-<position valeur="centre"><italique><image legende="Le menu des encodages dans Notepad++" legendevisible="oui">http://uploads.siteduzero.com/files/392001_393000/392789.png</image></italique></position>
-Déjà, première remarque, Notepad++ détecte automatiquement l’encodage du fichier ouvert et l’indique dans la barre de statut (en bas, encadré en bleu). C’est tout de suite mieux. :)
-<taille valeur="tpetit">Au passage, remarquez la mention « Dos\Windows » à gauche de cette indication. Elle indique le style utilisé pour les fins de ligne. Souvenez-vous, on avait vu qu’il existait plusieurs façon de coder une fin de ligne, selon les OS. Cette mention indique que notre fichier utilise le style Windows, c’est-à-dire <touche>CR LF</touche>.</taille>
-Ensuite, comme vous voyez, le menu « Encodage » permet de changer en direct l’encodage utilisé. les options « Encoder en <italique>xxx</italique> » ont le même effet que pour les navigateurs web (elles changent l’interprétation des octets déjà existants) ; elles influent en plus sur l’écriture (l’encodage des nouveaux caractères qu’on écrit).
-Pour modifier l’encodage d’un fichier, il ne faut pas cliquer sur « Encoder en <italique>xxx</italique> », car cela ne convertit pas le contenu existant pour l’adapter au nouvel encodage. Pour ça, il faut faire « Convertir en <italique>xxx</italique> ». ;)
-Enfin, vous constatez qu’on a quand même un choix d’encodages plus vaste que dans le Bloc-Notes !
-
-Après cet aperçu, faites un tour dans la configuration de votre éditeur. Il y a certainement des options qui nous intéressent.
-<position valeur="centre"><italique><image legende="Fenêtre de configuration de Notepad++ (paramètres relatifs à l’encodage)" legendevisible="oui">http://uploads.siteduzero.com/files/392001_393000/392792.png</image></italique></position>
-Ici, j’ai encadré la partie intéressante en vert. Je peux choisir l’encodage qui sera utilisé par défaut lors de la création d’un nouveau fichier <taille valeur="tpetit">(ainsi que le format des fins de ligne, ce dont je vous parlais tout à l’heure)</taille>.
-
-
-<titre2>Avec ou sans BOM ?</titre2>
-
-Remarquez qu’il y a deux encodages UTF-8. o_O L’une porte la mention « (sans BOM) », ce qui signifie que l’autre est un « UTF-8 avec BOM ». Si vous vous rappelez bien, la <acronyme valeur="Byte Order Mark">BOM</acronyme> est un caractère Unicode spécial qui permet d’indiquer le boutisme d’un fichier. Elle se place au tout début de ce fichier. Cette technique est utilisée pour l’UTF-16 (et l’UTF-32). En revanche, elle est inutile en UTF-8 puisqu’on n’a pas de problème de boutisme. Pire, elle peut rendre des fichiers invalides lorsqu’ils sont lus par certains programmes. C’est par exemple le cas des pages web, comme on verra plus tard.
-Pourtant, certains éditeurs dont le fameux Bloc-Notes la rajoutent automatiquement même en UTF-8, car ça les aide à détecter l’encodage du fichier. C’est une pratique déconseillée. Dans votre éditeur favori, choisissez toujours la version sans BOM si vous avez le choix.
-
-Ici, je vais nettoyer mon fichier de cette hérésie avec Notepad++. Pour ça, je fais simplement « Convertir en UTF-8 (sans BOM) » et j’enregistre. Dans les paramètres de mon éditeur (<italique>cf.</italique> ci-dessus), je choisis aussi l’UTF-8 sans BOM par défaut.
-
-
-
-<titre1>Écrire des documents (HTML, LaTeX, etc.)</titre1>
-
-Lorsque vous codez certains documents destinés à être lus et interprétés par un programme (page web HTML, document LaTeX…), il vous faut en plus préciser à ce programme l’encodage du fichier.
-
-
-<titre2>HTML (pages web) et XML</titre2>
-
-Pour les pages HTML, il existe un champ dans l’en-tête HTTP fourni par le serveur :<code type="en-tête HTTP">Content-Type: text/html; charset=‹ENCODAGE›</code>
-Vous voyez d’ailleurs que cet en-tête fournit aussi le type MIME du document (page HTML, fichier CSS, script JavaScript…).
-
-Cette technique est toutefois peu utilisée, car elle nécessite un serveur (ce qui n’est pas le cas si vous consultez un document local), et rend compliqué le fait de fournir sur le même serveur des fichiers avec des encodages différents (par exemple un serveur mutualisé où chacun est libre de choisir son encodage). À la place, on renseigne donc l’encodage… directement dans le fichier HTML. Ça semble bizarre vu que justement, en théorie, on ne peut pas encore lire le fichier. Mais la base ASCII vient à notre secours : quel que soit l’encodage, si on n’utilise que les caractères de l’ASCII, on pourra lire sans problème. :)
-L’information à fournir est sous la forme d’une balise <minicode type="html"><meta http-equiv /></minicode> (dans le <minicode type="html"><head/></minicode>) qui est l’équivalent de l’en-tête HTTP.
-<code type="html"><meta http-equiv="Content-Type" content="text/html; charset=‹ENCODAGE›" /></code>
-<information>En HTML5, cette ligne a été simplifiée en :<code type="html"><meta charset="‹ENCODAGE›"/></code></information>
-Vous devez la placer en toute première dans le <minicode type="html"><head/></minicode> afin de ne pas perturber la détection, et parce que le navigateur recommence depuis le début dès qu’il l’a lue. De plus, ne mettez rien de plus que nécessaire au-dessus, pas même un commentaire. Seuls des caractères ASCII doivent précéder cette ligne (et gardez à l’esprit que l’UTF-8 doit être utilisé sans BOM !).
-
-<secret><couleur nom="vertf">Bon</couleur> exemple :<code type="html"><html>    <head>        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />…</code>
-
-<couleur nom="rouge">Mauvais</couleur> exemple (il y a des caractères non-ASCII dans le commentaire) :<code type="html"><html>    <head>        <!-- Ligne nécessaire pour spécifier l’encodage : -->        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />…</code></secret>
-
-Vous pouvez trouver <lien url="http://www.iana.org/assignments/character-sets">ici</lien> la liste des noms d’encodage que vous pouvez mettre à la place de <minicode>‹ENCODAGE›</minicode> (insensibles à la casse). Les plus intéressants pour vous sont « <minicode>ISO-8859-1</minicode> » (ou « <minicode>latin-1</minicode> ») et « <minicode>UTF-8</minicode> ». Simple !
-
-Pendant qu’on y est, notez qu’il existe sur le SdZ <lien url="http://www.siteduzero.com/tutoriel-3-120328-passer-du-latin1-a-l-unicode.html">un tutoriel complet</lien> pour migrer son site web de latin-1 vers UTF-8. ;)
-
-
-Dans les langages de type XML en général (dont HTML), il est possible de spécifier l’encodage autrement. Il peut être renseigné dans le prologue XML, une sorte de « balise » spéciale optionnelle (vous savez, c’est celle qui fait <minicode type="zcode"><?xml … ?></minicode>), qui doit être placée sur la toute première ligne du fichier.
-<code type="xml"><?xml version="1.0" encoding="‹ENCODAGE›" ?></code>
-
-<titre2>LaTeX (documents mis en forme)</titre2>
-
-L’encodage est très important avec LaTeX. Comme en HTML, il faut déclarer avec quel encodage est enregistré le fichier en le précisant en paramètre du package <minicode>inputenc</minicode> :
-<code type="latex">\usepackage[‹ENCODAGE›]{inputenc}</code>
-(« <minicode>latin1</minicode> » ou « <minicode>utf8</minicode> » pour les plus courants). Les fichiers éventuellement inclus avec la commande <minicode type="latex">\input</minicode> doivent être enregistrés avec le même encodage, mais il n’y a pas besoin de le déclarer à nouveau.
-
-
-
-<titre1>Programmer</titre1>
-
-Lorsque vous créez un programme, il faut bien sûr faire attention à toutes ces histoires d’encodages pour que le programme fonctionne bien en fonction de ce qu’on lui passe comme texte.
-
-
-<titre2>Bas niveau : le langage C</titre2>
-
-Commençons par le « maître langage », le C. Le C est bas niveau, et ne nous cache donc rien de toutes ces questions. En C, on manipule directement les <italique>bytes</italique>, avec le type <minicode type="c">char</minicode>. Il y a également le type <minicode type="c">wchar_t</minicode> permettant d’après la norme de stocker tout caractère du jeu dit « étendu ».
-
-La gestion des encodages en C de façon portable est excessivement compliquée si l’on se contente de la bibliothèque standard. En effet, la norme met à disposition des <lien url="http://pwet.fr/man/linux/fonctions_bibliotheques/mbtowc">fonctions de conversion</lien> entre <minicode type="c">char</minicode> et <minicode type="c">wchar_t</minicode>, mais laisse à l’implémentation le choix des encodages utilisés pour ces deux types…
-Cette difficulté s’explique par le fait que le C est un vieux langage, inventé dans les années 70, lorsqu’on n’utilisait encore que des encodages sur un <italique>byte</italique> (l’ASCII, ou à la rigueur des pages de code). Tout était plus simple. Avec le développement de jeux plus complexes, il a fallu adapter la norme pour supporter les caractères « <italique>multibyte</italique> ». Le résultat tient presque de la bidouille et est difficilement exploitable, ou en tout cas fastidieux. On obtient une soupe de « <lien url="http://pwet.fr/man/linux/conventions/locale"><italique>locales</italique></lien> », de « caractères larges » (<italique>wide characters</italique>, <lien url="http://www.sensi.org/~alec/man/man_h/wchar.html">le type <minicode type="c">wchar_t</minicode></lien>), de « <lien url="http://www.unix.com/man-page/FreeBSD/3/multibyte/">caractères <italique>multibyte</italique></lien> » (le type <minicode type="c">char</minicode>) et d’« <lien url="http://pwet.fr/man/linux/fonctions_bibliotheques/mbsinit">états de conversion</lien> », le tout dépendant de l’implémentation…
-Cette complexité supplémentaire alliée à l’ignorance des programmeurs n’aide pas à changer les habitudes ; beaucoup continuent à croire qu’« un <minicode type="c">char</minicode> égale un caractère », ce qui est faux, archifaux.
-
-En plus, non content de faire attention au fonctionnement interne du programme, il faut aussi se préoccuper du format du texte que le programme reçoit en entrée et de celui qu’il produit en sortie. Sans parler de l’affichage en console… :diable: 
-
-Bref, pour avoir le même résultat sous tous les OS et éviter de nombreuses prises de tête, il peut être avisé d’utiliser une bibliothèque tierce (ou vous en coder une basique, ce qui fait un bon exercice). Je vous recommande <lien type="wikipedia" url="International Components for Unicode">la bibliothèque ICU</lien> qui est extrêmement complète et prend en charge toutes les fonctionnalités Unicode. ;)
-
-Je ne m’étendrai pas plus sur le sujet, qui nécessiterait un cours entier. Si vous êtes intéressés, renseignez-vous sur les notions évoquées ci-dessus.
-
-
-<titre2>Haut niveau</titre2>
-
-Les langages de haut niveau, c’est bien connu, cachent au programmeur les détails vilement matériels qui n’intéressent personne. Certains gèrent donc tout seul le bazar, pour notre plus grand bonheur. Tout ce qu’on a à faire, c’est lire et écrire du texte, sans se soucier du nombre d’octets qu’occupe un caractère, de l’encodage utilisé…
-Par exemple, la classe <lien url="http://docs.oracle.com/javase/6/docs/api/java/lang/String.html"><minicode type="java">String</minicode></lien> de Java utilise l’UTF-16. De plus, des fonctionnalités supplémentaires pour contrôler plus finement l’Unicode sont fournies par le <italique>package</italique> <lien url="http://docs.oracle.com/javase/6/docs/api/java/text/package-summary.html"><minicode type="java">Java.text</minicode></lien>.
-
-<position valeur="centre"><italique><image legende="Ouf !" legendevisible="oui">http://uploads.siteduzero.com/files/393001_394000/393486.png</image></italique></position>
-
-
-
-</position>]]>
-	</texte>
-      </souspartie>
-    
-  </sousparties>
-  
-    <qcm>
-      
-	<question id="38774">
-	  <label>
-	    <![CDATA[Qu’est-ce qu’un encodage ?]]>
-	  </label>
-	  <reponses>
-	    
-	      <reponse vrai="0" id="137372">
-		<![CDATA[Un ensemble de caractères ;]]>
-	      </reponse>
-	    
-	      <reponse vrai="1" id="137373">
-		<![CDATA[une façon d’écrire du texte sur un support informatique ;]]>
-	      </reponse>
-	    
-	      <reponse vrai="0" id="137374">
-		<![CDATA[une façon de coder du texte pour le rendre illisible par quelqu’un d’autre que vous et le destinataire ;]]>
-	      </reponse>
-	    
-	      <reponse vrai="0" id="137375">
-		<![CDATA[rien de tout cela.]]>
-	      </reponse>
-	    
-	  </reponses>
-	  <explication>
-	    <![CDATA[Relisez la première partie pour la distinction entre « jeu de caractères » et « encodage ». Cette distinction est très importante pour l’Unicode.
-
-Ne pas confondre « <gras>encodage</gras> », qui est ce que l’on vient d’étudier en long, en large et en travers, et « <gras>chiffrage</gras> », qui est l’action de rendre un message illisible sans une clef (ce qu’on nomme incorrectement « cryptage », et qui n’a aucun rapport avec le sujet).]]>
-	  </explication>
-	</question>
-      
-	<question id="38775">
-	  <label>
-	    <![CDATA[Qu’est-ce qu’ISO 8859-15 ?]]>
-	  </label>
-	  <reponses>
-	    
-	      <reponse vrai="1" id="137376">
-		<![CDATA[Une page de code utilisée pour les langues occidentales ;]]>
-	      </reponse>
-	    
-	      <reponse vrai="0" id="137377">
-		<![CDATA[un institut international d’informaticiens ;]]>
-	      </reponse>
-	    
-	      <reponse vrai="0" id="137378">
-		<![CDATA[le nom scientifique de l’huile d’olive.]]>
-	      </reponse>
-	    
-	  </reponses>
-	  <explication>
-	    <![CDATA[L’ISO tout court est un institut international, l’Organisation Internationale de Normalisation, chargé de produire des normes (et pas seulement pour l’informatique, notez).
-
-ISO 8859-1 est bien sûr la page de code <italique>latin-1</italique>, ça, voud devez vous en rappeler. Par déduction, ISO 8859-15 est aussi une page de code occidentale (plus précisément <italique>latin-9</italique>).]]>
-	  </explication>
-	</question>
-      
-	<question id="38776">
-	  <label>
-	    <![CDATA[Parmi ces propositions, laquelle n’est <taille valeur="gros">pas</taille> un avantage de l’UTF-8 ?]]>
-	  </label>
-	  <reponses>
-	    
-	      <reponse vrai="0" id="137379">
-		<![CDATA[L’UTF-8 permet de représenter tout le jeu de caractères Unicode.]]>
-	      </reponse>
-	    
-	      <reponse vrai="0" id="137380">
-		<![CDATA[L’UTF-8 est économe en mémoire.]]>
-	      </reponse>
-	    
-	      <reponse vrai="0" id="137381">
-		<![CDATA[L’UTF-8 est naturellement compatible avec l’ASCII.]]>
-	      </reponse>
-	    
-	      <reponse vrai="1" id="137382">
-		<![CDATA[L’UTF-8 est pratique à manipuler pour les programmes.]]>
-	      </reponse>
-	    
-	      <reponse vrai="0" id="137383">
-		<![CDATA[L’UTF-8 œuvre pour une planète plus verte.]]>
-	      </reponse>
-	    
-	  </reponses>
-	  <explication>
-	    <![CDATA[L’UTF-8 bénéficie d’une conception très astucieuse qui lui donne de nombreux avantages. Toutefois, on ne peut pas dire qu’il soit pratique à manipuler puisque la taille des caractères varie de 1 à 4 octets.
-Concrètement, cela signifie qu’on peut sans problème avancer d’un caractère dans une chaîne, mais il est déjà plus fastidieux et coûteux de revenir en arrière, d’aller à un caractère précis ou de prendre du texte au beau milieu. Les traitements sont plus compliqués et moins performants que pour une page de code (ou même que pour l’UTF-16).
-
-Oui, l’UTF-8 est écolo car il diminue la consommation de mémoire informatique (pour un encodage Unicode), ils l’ont dit à la télé !]]>
-	  </explication>
-	</question>
-      
-	<question id="38777">
-	  <label>
-	    <![CDATA[Quel(s) système(s) d’exploitation tourne(nt) maintenant avec Unicode ?]]>
-	  </label>
-	  <reponses>
-	    
-	      <reponse vrai="0" id="137384">
-		<![CDATA[Seulement Linux, et à condition de le configurer correctement à l’installation ;]]>
-	      </reponse>
-	    
-	      <reponse vrai="0" id="137385">
-		<![CDATA[Mac OS et personne d’autre ;]]>
-	      </reponse>
-	    
-	      <reponse vrai="0" id="137386">
-		<![CDATA[aucun, et c’est bien triste ;]]>
-	      </reponse>
-	    
-	      <reponse vrai="1" id="137387">
-		<![CDATA[tous (Windows, Mac, Linux) ;]]>
-	      </reponse>
-	    
-	      <reponse vrai="0" id="137388">
-		<![CDATA[tous sauf Windows, qui a toujours un train de retard.]]>
-	      </reponse>
-	    
-	  </reponses>
-	  <explication>
-	    <![CDATA[Relisez la partie « Et maintenant ? » si vous n’avez pas su répondre.
-Sous Windows, on a moins l’impression d’avoir droit à l’Unicode car les pages de codes « ANSI » sont encore très utilisées, pourtant Unicode (UTF-16, et aussi un support d’UTF-8) est intégré au système depuis XP.]]>
-	  </explication>
-	</question>
-      
-	<question id="38779">
-	  <label>
-	    <![CDATA[Pour que mon site web perso s’affiche sans écorcher les accents sur les écrans de mes gentils lecteurs, je …]]>
-	  </label>
-	  <reponses>
-	    
-	      <reponse vrai="0" id="137394">
-		<![CDATA[… formate mon texte en <span class="italique">latin-1</span> et j’espère.]]>
-	      </reponse>
-	    
-	      <reponse vrai="0" id="137395">
-		<![CDATA[… formate mon texte en UTF-8 et j’espère.]]>
-	      </reponse>
-	    
-	      <reponse vrai="1" id="137396">
-		<![CDATA[… spécifie l’encodage dans le code source.]]>
-	      </reponse>
-	    
-	      <reponse vrai="0" id="137397">
-		<![CDATA[… fournis la page sous forme d’une image JPEG.]]>
-	      </reponse>
-	    
-	  </reponses>
-	  <explication>
-	    <![CDATA[… Évidemment !
-
-(Le JPEG c’est mal, préférez le PNG.)]]>
-	  </explication>
-	</question>
-      
-	<question id="39105">
-	  <label>
-	    <![CDATA[À quoi sert une BOM ?]]>
-	  </label>
-	  <reponses>
-	    
-	      <reponse vrai="1" id="138478">
-		<![CDATA[À indiquer le boutisme utilisé par un texte UTF-16 ;]]>
-	      </reponse>
-	    
-	      <reponse vrai="0" id="138479">
-		<![CDATA[à indiquer le début d’un fichier ;]]>
-	      </reponse>
-	    
-	      <reponse vrai="0" id="138480">
-		<![CDATA[à faire en sorte qu’un texte UTF-8 occupe en mémoire une taille multiple de 4 ;]]>
-	      </reponse>
-	    
-	      <reponse vrai="0" id="138481">
-		<![CDATA[à rien.]]>
-	      </reponse>
-	    
-	  </reponses>
-	  <explication>
-	    <![CDATA[Je vous rappelle que <gras>BOM</gras> signifie <gras>« <italique>Byte Order Mask</italique> »</gras>, soit en français : « marque d’ordre des bytes ». Elle sert donc à indiquer le boutisme employé pour une chaîne de caractères ou un fichier, dont elle est le premier caractère.
-
-Elle a un point de code Unicode dédié, U+<couleur nom="bleu">FE</couleur><couleur nom="vertf">FF</couleur>.<liste>	<puce>Si on lit cette BOM encodée en UTF-16 avec le même boutisme que notre machine, alors on trouvera <taille valeur="tpetit">0x</taille><couleur nom="bleu">FE</couleur><couleur nom="vertf">FF</couleur> et tout est beau.</puce>	<puce>Si le boutisme est différent, on obtiendra à la place <taille valeur="tpetit">0x</taille><gras><couleur nom="vertf">FF</couleur><couleur nom="bleu">FE</couleur></gras> (qui correspond à un caractère Unicode invalide). On sait alors qu’en lisant le reste du texte UTF-16, on devra inverser les deux octets de chaque paire. Astuce !</puce></liste>
-On l’utilise surtout pour l’UTF-16 et l’UTF-32 (qui est plus rare), car ceux-ci sont sujets aux problèmes de boutisme. Certains éditeurs l’ajoutent aussi en UTF-8 pour faciliter la détection de l’encodage, mais c’est déconseillé car certains programmes ne la reconnaissent pas et plantent.]]>
-	  </explication>
-	</question>
-      
-	<question id="39106">
-	  <label>
-	    <![CDATA[Quelle taille en mémoire fait un caractère UTF-8 ?]]>
-	  </label>
-	  <reponses>
-	    
-	      <reponse vrai="0" id="138482">
-		<![CDATA[Un octet ;]]>
-	      </reponse>
-	    
-	      <reponse vrai="0" id="138483">
-		<![CDATA[un ou deux octets ;]]>
-	      </reponse>
-	    
-	      <reponse vrai="1" id="138484">
-		<![CDATA[entre un et quatre octets ;]]>
-	      </reponse>
-	    
-	      <reponse vrai="0" id="138485">
-		<![CDATA[deux octets ;]]>
-	      </reponse>
-	    
-	      <reponse vrai="0" id="138486">
-		<![CDATA[deux octets, parfois (mais rarement) quatre ;]]>
-	      </reponse>
-	    
-	  </reponses>
-	  <explication>
-	    <![CDATA[Je n’ai rien à ajouter, sinon de relire la partie sur les encodages de l’Unicode si vous vous êtes trompé.
-
-Si le format exact de l’UTF-8 (ou UTF-16) vous intéresse, documentez-vous ! L’<lien type="wikipedia" url="UTF-8">article de Wikipédia</lien> contient toutes les informations nécesssaires. ;)]]>
-	  </explication>
-	</question>
-      
-    </qcm>
-  
-  <conclusion>
-    <![CDATA[<position valeur="justifie">Alors ? Toujours en vie ? Ça fait un gros pavé à lire mais ce n’est pas bien sorcier, et surtout… qu’est-ce que c’est bien une fois qu’on sait tout ça ! On comprend enfin ce qui se passe de l’autre côté de l’écran et les « caractères spéciaux » ne font plus si peur, hein, avouez ? :p 
-
-Ce que vous venez d’apprendre est super-méga-important dès que vous commencez à bidouiller un peu sur votre PC. Comme le dit Joel (<italique>cf.</italique> plus bas), c’est « ce que tout programmeur doit savoir ». Malheureusement, tout programmeur ne le sait pas, et les ignorants sont même nombreux. C’est ce qui explique de nombreux messages de demande d’aide sur les forums du SdZ, et ce qui a motivé l’écriture de ce cours, dans l’espoir qu’il fera progresser les choses dans le bon sens.
-
-
-<titre2>Liens</titre2>
-
-Vous voulez encore de la lecture ? Vous allez en avoir !
-
-Tout d’abord, quelques cours intéressants sur le sujet :
-<liste>	<puce><lien url="http://french.joelonsoftware.com/Articles/Unicode.html">« Ce que tout programmeur doit savoir »</lien> (et <lien url="http://joelonsoftware.com/Articles/Unicode.html">sa version anglaise</lien>) : un article de <italique>Joel on Software</italique> destiné à sensibiliser les programmeurs à ces notions (je suis un plan proche de lui).</puce>	<puce><lien url="http://openweb.eu.org/articles/jeux_caracteres">« Introduction aux jeux de caractères »</lien> : un cours de Steve Frécinaux sur le site Openweb.</puce></liste>
-Ensuite, Wikipédia sait tout <barre>et voit tout</barre>. Elle est très bien fournie sur ce thème (et n’hésitez pas à aller voir les articles anglais qui sont souvent plus complets). Vous pouvez par exemple consulter l’article « <lien type="wikipedia" url="Codage des caractères">Codage de caractères</lien> », ou un <lien type="wikipedia" url="Comparison of Unicode encodings" langue="en">comparatif des encodages Unicode</lien> (en anglais). Si vous avez besoin de connaître la valeur d’un caractère dans un encodage particulier, elle fournit toutes les tables intéressantes de façon claire (quelques exemples : <lien type="wikipedia">ASCII</lien>, <lien type="wikipedia">CP850</lien>, <lien type="wikipedia">latin-1</lien>).
-Et même le JUC <lien type="wikipedia" url="Table des caractères Unicode">y est détaillé</lien> de façon systématique et bien organisée (pas sur une seule page, évidemment). ;)
-
-Enfin, <lien url="http://www.ltg.ed.ac.uk/~richard/utf-8.cgi">Un outil bien pratique pour calculer l’UTF-8. ^^</lien></position>]]>
-  </conclusion>
-</minituto>
