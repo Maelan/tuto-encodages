@@ -1,5 +1,7 @@
-Lorsqu’on code certains documents destinés à être lus par un programme (page
-HTML, document LaTeX…), il faut préciser à ce programme l’encodage du fichier.
+Comme évoqué en introduction, plutôt que de se reposer sur une détection
+automatique, certains types de documents permettent — voire requièrent — de
+préciser leur encodage directement dans le texte du fichier. On va voir
+l’exemple des pages HTML et des documents LaTeX.
 
 # HTTP, HTML & XML
 
@@ -73,6 +75,15 @@ doit être placée sur la toute première ligne du fichier.
 
     :::xml
     <?xml version="1.0" encoding="‹ENCODAGE›" ?>
+
+[[information]]
+| À propos, XML (donc HTML) permet d’insérer un caractère Unicode arbitraire,
+| même s’il n’existe pas dans l’encodage du code source : pour insérer le point
+| de code U+CODE, la syntaxe est `&#xCODE;` (`&…;` est la syntaxe des entités
+| XML, `#` signifie « nombre » et `x` signifie « hexadécimal »).
+|
+| Un mécanisme similaire existe dans de nombreux langages, par exemples `\CODE`
+| en CSS ou `\uCODE` en C.
 
 # LaTeX
 

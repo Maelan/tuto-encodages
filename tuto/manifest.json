@@ -2,7 +2,7 @@
 	"version": 2,
 	"type": "TUTORIAL",
 	"title": "Comprendre les encodages",
-	"description": "ASCII, latin-1, Unicode, UTF-8…",
+	"description": "ASCII, latin-1, Unicode, UTF-8… quésaco ?",
 	"licence": "CC BY-NC-SA",
 	"slug": "encodages",
 	"object": "container",
@@ -10,48 +10,50 @@
 	"conclusion": "conclusion.md",
 	"children": [
 		{
-			"title": "La grande épopée des encodages",
-			"slug": "1-histoire",
+			"title": "La théorie : le texte en informatique",
+			"slug": "1-theorie",
 			"object": "container",
-			"introduction": "1-histoire/introduction.md",
+			"introduction": "1-theorie/introduction.md",
+			"conclusion": "1-theorie/conclusion.md",
+			"children": [
+				{
+					"title": "Concepts",
+					"slug": "1-concepts",
+					"object": "extract",
+					"text": "1-theorie/1-concepts.md"
+				}
+			]
+		},
+		{
+			"title": "La grande épopée des encodages",
+			"slug": "2-histoire",
+			"object": "container",
+			"introduction": "2-histoire/introduction.md",
+			"conclusion": "2-histoire/conclusion.md",
 			"children": [
 				{
 					"title": "Au commencement était l’ASCII",
 					"slug": "1-ascii",
 					"object": "extract",
-					"text": "1-histoire/1-ascii.md"
+					"text": "2-histoire/1-ascii.md"
 				},
 				{
 					"title": "La révolte gronde",
 					"slug": "2-bazar",
 					"object": "extract",
-					"text": "1-histoire/2-bazar.md"
+					"text": "2-histoire/2-bazar.md"
 				},
 				{
 					"title": "Unicode, la solution ultime",
 					"slug": "3-unicode",
 					"object": "extract",
-					"text": "1-histoire/3-unicode.md"
-				}
-			]
-		},
-		{
-			"title": "Et aujourd’hui ?",
-			"slug": "2-aujourdhui",
-			"object": "container",
-			"introduction": "2-aujourdhui/introduction.md",
-			"children": [
-				{
-					"title": "Les encodages actuels",
-					"slug": "1-encodages-actuels",
-					"object": "extract",
-					"text": "2-aujourdhui/1-encodages-actuels.md"
+					"text": "2-histoire/3-unicode.md"
 				},
 				{
-					"title": "Détection de l’encodage",
-					"slug": "2-detection-encodage",
+					"title": "Et aujourd’hui ?",
+					"slug": "4-aujourdhui",
 					"object": "extract",
-					"text": "2-aujourdhui/2-detection-encodage.md"
+					"text": "2-histoire/4-aujourdhui.md"
 				}
 			]
 		},

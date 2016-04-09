@@ -3,9 +3,17 @@ Standard Code for Information Interchange_ (en français, le « code américai
 normalisé pour l’échange d’informations »). C’est une norme étasunienne,
 inventée en 1961, qui avait pour but d’organiser le bazar informatique à
 l’échelle nationale. Ce n’est donc pas le premier encodage existant, mais il
-s’est imposé au point d’éclipser les précédents.
+s’est imposé au point d’éclipser les précédents.[^EBCDIC]
 
 *[ASCII]: American Standard Code for Information Interchange
+
+[^EBCDIC]:
+  Parmi les dinosaures dont il subsiste encore des fossiles aujourd’hui, on peut
+  citer [EBCDIC][].
+
+*[EBCDIC]: Extended Binary Coded Decimal Interchange Code
+
+[EBCDIC]: https://fr.wikipedia.org/wiki/EBCDIC
 
 Le terme « ASCII » est souvent employé de manière incorrecte pour désigner des
 encodages qui étendent l’ASCII ou qui en dérivent.

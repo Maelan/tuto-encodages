@@ -1,5 +1,4 @@
-Notre périple au fil des âges nous a ramené au temps présent. Que retenir de
-tout ça ?
+Quoi retenir ?
 
 -   Le principe du stockage de texte en informatique : jeux de caractères et
     encodages.
@@ -9,4 +8,5 @@ tout ça ?
     trois.
 -   Leurs usages actuels.
 
-On va tout de suite détailler le dernier point !
+Il va de soi que je vous recommande d’utiliser l’UTF-8 exclusivement, partout.
+Ou éventuellement l’UTF-16 si vous utilisez un alphabet non latin.

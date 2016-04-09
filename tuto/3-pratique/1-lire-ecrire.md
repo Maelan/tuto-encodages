@@ -1,57 +1,27 @@
-Lorsqu’on consulte un document, que ce soit un fichier texte (code source par
-exemple) ou une page web, il faut la lire avec le bon encodage. Sinon, les
-valeurs seront mal interprétées. Par exemple, si on encode ce texte en UTF-8 :
-
-> l'événement du siècle
-
-et qu’on le lit en latin-1, on verra ceci :
-
-> l'Ã©vÃ©nement du siÃ¨cle
-
-Splendide, non ? Vous avez déjà dû croiser ce genre d’erreurs… Pour l’expliquer,
-souvenons-nous qu’UTF-8 encode certains caractères, dont les lettres accentuées,
-sur deux octets ; ici la lettre `é` donne les octets 0xC3 et 0xA9. Or, latin-1
-encode tous ses caractères sur un octet. Les octets 0xC3 et 0xA9 sont donc
-interprétés séparément, et donnent les caractères `Ã` et `©`, respectivement.
-Notons que tous les autres caractères sont lus correctement, car ils
-appartiennent à la base commune ASCII. On voit maintenant l’intérêt de cette
-compatibilité : même avec un mauvais encodage, le texte reste globalement
-lisible.
-
-Réciproquement, si ce texte était encodé en latin-1 et qu’on tentait de le lire
-en UTF-8, on aurait sans doute quelque chose comme :
-
-> l'�v�nement du si�cle
-
-car la séquence d’octets 0xE9.0x67, qui code `év` en latin-1, est invalide en
-UTF-8.
-
-Le problème se pose même si tous les caractères font la même taille dans les
-deux encodages, une même valeur pouvant désigner deux caractères différents d’un
-encodage à l’autre (le fameux exemple du dollar `$` devenu livre `£`).
+Commençons par apprendre à régler manuellement l’encodage si jamais la détection
+automatique échoue.
 
 # Lire une page web
 
-La plupart du temps, on n’a pas à se soucier de l’encodage pour lire une page
-web, car celui-ci est précisé dans le code source. Il arrive toutefois que ce ne
-soit pas fait, ou mal fait, et que le navigateur échoue à le deviner. Par
-exemple :
+La plupart du temps, lire une page web ne pose aucun souci car son encodage est
+précisé dans son code source. Il arrive toutefois que ce ne soit pas fait, ou
+mal fait, et que le navigateur échoue à le deviner. Par exemple :
 
 ![Exemple de page lue avec un mauvais encodage](archive:écran-Firefox-1.png)
 Figure: Exemple de page lue avec un mauvais encodage
 
 C’est moche. C’est désagréable à lire. Heureusement, on peut y remédier
 manuellement. Tout navigateur qui se respecte permet de jongler entre les
-encodages. Pour Firefox par exemple, le menu est caché sous « Affichage » :
+encodages. Pour Firefox, le menu est caché sous « Affichage » :
 
 ![Menu des encodages dans Firefox](archive:écran-Firefox-2-rogné.png)
 Figure: Menu des encodages dans Firefox
 
 Pour l’instant, le navigateur est en « détection automatique », ce qui a conduit
 à l’utilisation incorrecte d’ISO-8859-1 (latin-1). On peut en changer. Ici, la
-page est probablement en UTF-8 (ça ressemble à l’erreur qu’on a vue en
-introduction), donc on essaie cet encodage. On choisit l’option correspondante
-dans le menu, et…
+page est probablement en UTF-8 (ça ressemble à l’erreur vue en introduction),
+donc on essaie cet encodage. On choisit l’option correspondante dans le menu,
+et…
 
 ![Tadaam !](archive:écran-Firefox-3.png)
 Figure: Tadaam !
@@ -100,8 +70,8 @@ Ensuite, le menu « Encodage » permet de changer en direct l’encodage uti
 Comme dans les navigateurs web, les options « Encoder en _xxx_ » changent
 l’interprétation des octets existants ; en plus, elles déterminent le codage des
 caractères nouvellement insérés. Pour modifier l’encodage d’un fichier, il ne
-faut pas cliquer sur « Encoder en _xxx_ », car cela n’adapte pas le contenu ;
-pour ça, il faut faire « Convertir en _xxx_ ».
+faut pas cliquer sur « Encoder en _xxx_ », car cela n’adapte pas le contenu
+existant ; pour ça, il faut faire « Convertir en _xxx_ ».
 
 Enfin, on a quand même plus de choix que dans le Bloc-Notes !
 
@@ -115,7 +85,7 @@ Ici, j’ai encadré la partie intéressante en vert. On peut choisir l’encoda
 le format des fins de ligne) qui sera utilisé par défaut lors de la création
 d’un nouveau fichier.
 
-# Avec ou sans BOM ?
+## Avec ou sans BOM ?
 
 Remarquons qu’il y a deux encodages UTF-8. L’une porte la mention « (sans
 BOM) », ce qui signifie que l’autre est un « UTF-8 avec BOM ». On a déjà parlé
@@ -132,3 +102,167 @@ si vous avez le choix.
 Ici, nettoyons notre fichier de cette hérésie avec Notepad++. Pour ça, on fait
 simplement « Convertir en UTF-8 (sans BOM) » et on enregistre. Dans les
 paramètres, on choisit aussi l’UTF-8 sans BOM par défaut.
+
+# Convertir un fichier
+
+[man1-iconv]: http://man7.org/linux/man-pages/man1/iconv.1.html
+[man3-iconv]: http://man7.org/linux/man-pages/man3/iconv.3.html
+
+On peut aussi convertir un fichier sans passer par un éditeur. C’est par exemple
+la fonction d’[`iconv`][man1-iconv], programme en ligne de commande disponible
+sur les unixoïdes (il a donné son nom à [l’API standard][man3-iconv], intégrée à
+la _glibc_, qui fait la même chose). Il s’utilise comme ça :
+
+    :::console
+    $  iconv [-f DEPUIS] [-t VERS]
+
+les formats `DEPUIS` et `VERS` pouvant être omis pour utiliser la _locale_
+actuelle. Par exemple :
+
+<--COMMENT
+    :::console
+    $  echo "déjà"  | iconv -t latin1  | hexdump -C
+    00000000  64 e9 6a e0 0a                                    |d.j..|
+COMMENT-->
+
+    :::console
+    $  echo "déjà"  | iconv -t utf16  | hexdump -C
+    00000000  ff fe 64 00 e9 00 6a 00  e0 00 0a 00              |..d...j.....|
+
+On observe la BOM (U+FEFF) qui nous dit que l’encodage est petit-boutiste, et
+les octets nuls insérés _après_ chaque octet de latin-1.
+
+[[attention]]
+| Attention lorsque vous essayez de modifier un fichier en place ; la commande
+| suivante :
+|
+|     :::console
+|     $  commande  < fichier > fichier
+|
+| effacera le contenu du fichier… Il faut passer par un fichier temporaire. De
+| toute façon, il est plus prudent de vérifier le résultat avant d’écraser le
+| fichier.
+
+Il existe aussi le programme [`recode`][man1-recode], qui s’utilise de façon
+similaire :
+
+    :::console
+    $  recode [DEPUIS][..VERS]
+
+[man1-recode]: http://linux.die.net/man/1/recode
+
+Sa spécificité est qu’il ne gère pas seulement les encodages textuels (le sujet
+de cet article), mais plus généralement divers types de codages (ce que le
+logiciel nomme « surfaces »), qui peuvent se superposer. Cela inclut les formats
+de fin de ligne (LF, CR ou CRLF) et les « encodages de transfert » ([Base64][],
+[Quoted-Printable][]…) utilisés notamment par les courriels.
+
+[quoted-printable]: https://fr.wikipedia.org/wiki/Quoted-Printable
+[Base64]:           https://fr.wikipedia.org/wiki/Base64
+
+Par exemple, pour convertir le texte en UTF-16, coder les octets obtenus avec
+Quoted-Printable, puis appliquer le format de fin de ligne CR-LF au tout :
+
+<--COMMENT
+    :::console
+    $  echo "déjà"  | recode ..latin1/QP/CRLF  | hexdump -C 00000000
+    64 3d 45 39 6a 3d 45 30  0d 0a                    |d=E9j=E0..|
+COMMENT-->
+
+    :::console
+    $  echo "déjà"  | recode ..utf16/QP/CRLF  | hexdump -C
+    00000000  3d 46 45 3d 46 46 3d 30  30 64 3d 30 30 3d 45 39  |=FE=FF=00d=00=E9|
+    00000010  3d 30 30 6a 3d 30 30 3d  45 30 3d 30 30 0d 0a     |=00j=00=E0=00..|
+
+Observons que chaque octet qui ne correspond pas à un caractère affichable de
+l’ASCII est codé par `=XX` (Quoted-Printable), et que la fin de ligne est codée
+par la séquence 0x0D, 0x0A (CR-LF).
+
+`recode` a aussi une foncton très pratique pour examiner du texte !
+
+    :::console
+    $  echo "déjà, 한"  | recode ..dump-with-names
+    UCS2   Mné   Description
+
+    0064   d     lettre minuscule latine d
+    00E9   e'    lettre minuscule latine e accent aigu
+    006A   j     lettre minuscule latine j
+    00E0   a!    lettre minuscule latine a accent grave
+    002C   ,     virgule
+    0020   SP    espace
+    1112         hangûl tch'ôsong hiûh
+    1161         hangûl djoungsong a
+    11AB         hangûl djôngsong niûn
+    000A   LF    interligne (lf)
+
+# Corriger un encodage mixte
+
+Il arrive qu’un fichier mélange plusieurs encodages, comme l’UTF-8 et le latin1.
+Ce peut être le cas d’un fichier texte récupérés sur Internet, ou de la base de
+données d’un site web. Démonstration :
+
+    :::console
+    $  cat test
+    ligne encodée en UTF-8
+    ligne encodée en latin-1
+
+Normalement, ma console qui est en UTF-8 devrait plutôt afficher :
+
+    :::console
+    $  cat test
+    ligne encodée en UTF-8
+    ligne encod�e en latin-1
+
+mais elle utilise un mode spécial pour afficher quand même les caractères
+encodés en latin-1 : lorsqu’une séquence d’octets n’est pas de l’UTF-8 valide,
+elle est relue comme du latin-1. Cette astuce est utilisée par de nombreux
+logiciels, dont la plupart des clients IRC[^IRC]. On peut la considérer comme
+pratique, ou commme nuisible parce qu’elle masque les erreurs.
+
+[^IRC]:
+  En effet, IRC n’offre aucun moyen de préciser l’encodage des messages, alors
+  qu’en pratique il met en contact des gens qui en utilisent de toutes les
+  sortes…
+
+Bref. On peut vérifier que le fichier mélange effectivement les deux encodages :
+
+    :::console
+    $  cat test  | hexdump -C
+    00000000  6c 69 67 6e 65 20 65 6e  63 6f 64 c3 a9 65 20 65  |ligne encod..e e|
+    00000010  6e 20 55 54 46 2d 38 0a  6c 69 67 6e 65 20 65 6e  |n UTF-8.ligne en|
+    00000020  63 6f 64 e9 65 20 65 6e  20 6c 61 74 69 6e 2d 31  |cod.e en latin-1|
+    00000030  0a                                                |.|
+
+C’est bien une erreur, qui fait planter des programmes plus stricts :
+
+    :::console
+    $  cat test  | iconv -f utf8
+    ligne encodée en UTF-8
+    ligne encod
+    iconv: séquence d'échappement non permise à la position 35
+    $  cat test  | recode utf8..
+    ligne encodée en UTF-8
+    ligne encod
+    recode: Entrée invalide dans « UTF-8..CHAR »
+
+`iconv` a peut ignorer les erreurs, mais ce n’est pas idéal :
+
+    :::console
+    $  cat test  | iconv -f utf8 -t //IGNORE
+    ligne encodée en UTF-8
+    ligne encode en latin-1
+
+Il faut corriger un tel fichier. Il ne semble pas y avoir de programme répandu
+pour ça, mais ce n’est pas difficile à coder. Vous pouvez par exemple jeter un
+œil à [ce script][script-perl] en Perl ou à [celui-ci][script-ocaml] en OCaml.
+
+[script-perl]:  https://gist.github.com/chansen/1522213
+[script-ocaml]: https://gist.github.com/Maelan/e3f25ec0a6832ba1e0eb9584c3c58eff
+
+    :::console
+    $  cat test  | fix-mixed-utf8  | hexdump -C
+    00000000  6c 69 67 6e 65 20 65 6e  63 6f 64 c3 a9 65 20 65  |ligne encod..e e|
+    00000010  6e 20 55 54 46 2d 38 0a  6c 69 67 6e 65 20 65 6e  |n UTF-8.ligne en|
+    00000020  63 6f 64 c3 a9 65 20 65  6e 20 6c 61 74 69 6e 2d  |cod..e en latin-|
+    00000030  31 0a                                             |1.|
+

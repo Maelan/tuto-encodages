@@ -50,7 +50,7 @@ grande partie des idéogrammes asiatiques). Il reste encore de la place à
 revendre. Et pourtant, dans ces 11 %, on a tout mis ou presque : les caractères
 de tous les anciens jeux, tous les alphabets modernes, pléthore de symboles… Le
 JUC n’est peut-être pas la solution définitive et éternelle, mais on peut dormir
-sur nos deux oreilles pendant les décennies à venir.
+sur nos deux oreilles pour les décennies à venir.
 
 Par souci de compatibilité, le JUC reprend latin-1 (donc l’ASCII) pour ses 256
 premiers caractères.
@@ -74,20 +74,84 @@ bougent plus.
 On peut voir Unicode comme une surcouche d’ISO 10646. ISO 10646 liste les
 caractères du jeu en leur assignant un nom et un code. Unicode leur ajoute des
 attributs et des relations. Unicode décrit aussi des algorithmes de traitement
-notamment pour la gestion des sens d’écriture et l’ordre alphabétique, et
-surtout — ce qui nous intéresse ici — des encodages pour transcrire le JUC.
+notamment pour les codages équivalents, les sens d’écriture et l’ordre
+alphabétique, et des encodages pour transcrire le JUC.
+
+# Graphèmes _vs_ points de code
+
+Depuis le début, je parle de « caractères ». En fait, pour Unicode, je devrais
+dire **points de code**. Les « vrais » caractères sont appelés **graphèmes**.
+Par exemple, pour écrire le graphème `é` (e accent aigu), je peux utiliser le
+caractère « précomposé » U+00E9 (hérité de latin-1), mais aussi la séquence
+U+0065, U+0301. U+0065 est le caractère de base (`e`, la lettre e) et U+0301 est
+une diacritique (` ́`, l’accent aigu) ; les deux se **composent** pour former un
+seul graphème. Ce sont deux codages possibles du *même* graphème, qui doivent
+donc être considérés comme équivalents.
+
+[[information]]
+| En pratique, la composition de points de code est peu utilisée pour les
+| alphabets latins car on a hérité des caractères précomposés des jeux
+| précédents ; et, de fait, les systèmes de rendu les gèrent assez mal. Testons
+| le navigateur :
+| 
+|     é (U+00E9)
+|     é (U+0065, U+0301)
+| 
+| Chez moi, Firefox 45 affiche l’accent de la deuxième version trop à droite.
+| 
+| En revanche, une application intéressante de la composition, et qui montre
+| qu’elle n’est pas restreinte aux diacritiques, est le [hangeul][], l’alphabet
+| coréen. Comme les alphabets européens, les unités de base sont des lettres,
+| mais au lieu d’être écrites une à une, elles sont regroupées par syllabes.
+| Chaque syllabe forme un graphème composé de deux à six lettres. Par exemple,
+| `한` est la syllabe _han_, composée des trois lettres `ㅎ` (_h_), `ㅏ` (_a_)
+| et `ㄴ` (_n_). Unicode inclut les lettres du hangeul (dont 51 sont encore
+| d’actualité et de nombreuses autres optionnelles), avec pour chacune une
+| [version isolée][hangeul-isolées], et plusieurs [versions
+| composables][hangeul-composables] (selon la position dans la syllabe :
+| initiale, médiane, finale). Cependant, Unicode inclut également les [syllabes
+| précomposées][hangeul-syllabes] (utiles), évidemment beaucoup plus nombreuses
+| (11 172).
+| 
+|     한 (forme précomposée)
+|     한 (forme décomposée)
+| 
+| Le hangeul est un fantasme de lingüistes, je vous laisse en apprendre plus sur
+| l’article Wikipédia !
+
+[hangeul]: https://fr.wikipedia.org/Hangeul
+[hangeul-isolées]:     https://en.wikipedia.org/wiki/Hangul_Compatibility_Jamo
+[hangeul-composables]: https://en.wikipedia.org/wiki/Hangul_Jamo_(Unicode_block)
+[hangeul-syllabes]:    https://en.wikipedia.org/wiki/Hangul_Syllables
+
+Ces particularités d’Unicode ont plusieurs conséquences :
+
+1.  Le mécanisme de composition implique que les graphèmes ne sont en vérité pas
+    codés avec une taille fixe, et ce même si les points de code le sont (ce qui
+    n’est pas le cas, comme on verra).
+1.  L’existence de caractères précomposés implique que le codage des graphèmes
+    n’est pas unique. La norme Unicode définit les équivalences entre codages,
+    ainsi que des algorithmes pour calculer une forme normale.
+
+Une application soigneuse doit prendre en compte tout ceci. Toutefois, je ne
+développerai pas plus sur ce sujet, cet article se focalisant surtout sur les
+encodages. Dans la suite, je continuerai néanmoins à dire « caractère » au lieu
+de « point de code », puissent les puristes me pardonner.
 
 # Un jeu, des encodages
 
+Comme je l’ai dit, Unicode définit plusieurs encodages du JUC.
+
 [[question]]
-| Des encodages ? Mais, je croyais qu’Unicode était un encodage ?
+| Des encodages ? Mais, je croyais qu’Unicode *était* un encodage ?
 
 Unicode est basiquement un **jeu de caractères** (un ensemble de caractères
 auxquels on attribue à chacun un point de code unique) et non un **encodage**
 (façon de représenter ce point de code en mémoire). C’est ici que la distinction
 prend tout son sens. Auparavant, les deux se confondaient puisque tous les jeux
-de caractères étaient associés à un encodage simple : vu que leur codes tenaient
-sur un ou deux octets, on se contentait de les écrire tels quels en mémoire.
+de caractères étaient associés à un encodage simple : vu que leurs codes
+tenaient sur un ou deux octets, on se contentait de les écrire tels quels en
+mémoire.
 
 Or, les points de codes d’Unicode nécessitent beaucoup plus qu’un octet : il
 leur en faudrait quatre[^petits-malins] ! Cela voudrait dire que si l’on
@@ -101,21 +165,22 @@ qu’avec nos pages de code sur un octet, comme latin-1.
 plein d’octets nuls :
 
 +--------------------------+-------------------------------------+------------------------------------------+
-|Codes                     |Encodage selon UTF-32                |Caractères disponibles dans cet intervalle|
+|Codes                     |Encodage en UTF-32                   |Caractères disponibles dans cet intervalle|
 +==========================+=====================================+==========================================+
 |jusqu’à U+00FF (2^8^-1)   |`00000000 00000000 00000000 bbbbbbbb`|langues occidentales (latin-1)            |
 +--------------------------+-------------------------------------+------------------------------------------+
-|jusqu’à U+FFFF (2^16^-1)  |`00000000 00000000 bbbbbbbb bbbbbbbb`|la quasi-totalité des alphabets           |
-|                          |                                     |actuellement utilisés dans le monde       |
+|jusqu’à U+FFFF (2^16^-1)  |`00000000 00000000 bbbbbbbb bbbbbbbb`|la quasi-totalité des alphabets actuels   |
+|                          |                                     |([BMP][])                                 |
 +--------------------------+-------------------------------------+------------------------------------------+
 |jusqu’à U+10FFFF (2^21^-1)|`00000000 000bbbbb bbbbbbbb bbbbbbbb`|tous les caractères                       |
 +--------------------------+-------------------------------------+------------------------------------------+
 Table:
-  Tableau pour mieux visualiser le problème
+  Consommation mémoire en UTF-32
   (les codes sont en binaire, les `b` symbolisent les bits occupés)
 
-Comme on le voit, il y aurait toujours au moins un octet nul, souvent deux. Le
-cas extrême est celui d’un Occidental qui gaspille trois octets par caractère.
+Comme on le voit, il y aurait toujours au moins un octet nul, très souvent deux.
+Le cas extrême est celui d’un Occidental qui gaspille trois octets par
+caractère.
 
 Cet encodage existe tout de même, il est nommé **UTF-32**, mais est rarement
 employé — sauf en interne par quelques programmes, car il reste plus facile à
@@ -136,6 +201,18 @@ mathématique simple[^taille-juc].
   inhabituelle de 17×2^16^ points de code (la limite précédente, 2^31^, vient du
   codage UTF-8).
 
++--------------------------+-------------------------------------+------------------------------------------+
+|Codes                     |Encodage en UTF-16                   |Caractères disponibles dans cet intervalle|
++==========================+=====================================+==========================================+
+|jusqu’à U+FFFF (2^16^-1)  |`bbbbbbbb bbbbbbbb`                  |la quasi-totalité des alphabets actuels   |
+|                          |                                     |([BMP][])                                 |
++--------------------------+-------------------------------------+------------------------------------------+
+|jusqu’à U+10FFFF (2^21^-1)|`bbbbbbbb bbbbbbbb bbbbbbbb bbbbbbbb`|tous les caractères                       |
++--------------------------+-------------------------------------+------------------------------------------+
+Table:
+  Consommation mémoire en UTF-16
+  (les codes sont en binaire, les `b` symbolisent les bits occupés)
+
 Les caractères de cet encodage ne font donc pas tous la même taille, ce qui
 complique un peu les traitements : si on stocke une chaîne UTF-16 dans un
 tableau de codes de deux octets, le _n_^e^ caractère ne se trouve pas forcément
@@ -147,7 +224,7 @@ bien deux octets.
 
 *[BMP]: Basic Multilingual Plane
 
-[BMP]: https://en.wikipedia.org/wiki/Plane_(Unicode)
+[BMP]: https://en.wikipedia.org/wiki/Plane_(Unicode)#Basic_Multilingual_Plane
 
 De plus, l’UTF-16 (et l’UTF-32) fait surgir une difficulté technique
 supplémentaire : le [boutisme][] (_endianness_). Ce terme mystique désigne
@@ -187,8 +264,8 @@ Si la chaîne contient une BOM, il suffit donc de lire ses deux premiers octets
 pour connaître son boutisme.
 
 Remarquons que ce texte s’encode en UTF-16 exactement comme en latin-1, avec des
-valeurs sur deux octets au lieu d’un (donc un octet nul sur deux). On occupe
-donc deux fois plus de mémoire.
+valeurs sur deux octets au lieu d’un (donc un octet nul sur deux). Ici, on
+occupe donc deux fois plus de mémoire.
 
 # UTF-8
 
@@ -197,8 +274,48 @@ variable, et l’économie de mémoire plus grande. Comme son nom l’indique, l
 de base est l’octet. Il code les premiers caractères (ceux de l’ASCII) sur un
 octet, les suivants sur deux, trois et jusqu’à quatre octets.
 
-Cet encodage est compatible avec l’ASCII : les caractères de l’ASCII sont codés
-exactement de la même manière en UTF-8. De plus, l’encodage a été conçu afin que
++--------------------------+-------------------------------------+------------------------------------------+
+|Codes                     |Encodage en UTF-8                    |Caractères disponibles dans cet intervalle|
++==========================+=====================================+==========================================+
+|jusqu’à U+007F (2^7^-1)   |`0bbbbbbb`                           |latin de base (ASCII)                     |
++--------------------------+-------------------------------------+------------------------------------------+
+|jusqu’à U+07FF (2^11^-1)  |`110bbbbb 10bbbbbb`                  |alphabets d’Europe et du Moyen-Orient     |
+|                          |                                     |[^alphabets-2octets]                      |
++--------------------------+-------------------------------------+------------------------------------------+
+|jusqu’à U+FFFF (2^16^-1)  |`1110bbbb 10bbbbbb 10bbbbbb`         |la quasi-totalité des alphabets actuels   |
+|                          |                                     |([BMP][])                                 |
++--------------------------+-------------------------------------+------------------------------------------+
+|jusqu’à U+10FFFF (2^21^-1)|`11110bbb 10bbbbbb 10bbbbbb 10bbbbbb`|tous les caractères                       |
++--------------------------+-------------------------------------+------------------------------------------+
+Table:
+  Consommation mémoire en UTF-8
+  (les codes sont en binaire, les `b` symbolisent les bits occupés)
+
+[^alphabets-2octets]:
+  alphabets latin, API, grec, copte, cyrillique, arménien, hébreu, syriaque,
+  arabe, thâna (utilisé aux Maldives), n’ko (utilisé en Afrique de l’Ouest) ; la
+  carte se trouve [ici][carte-alphabets-2octets]. Notons qu’à l’exception
+  peut-être du n’ko (qui est une création récente vaguement inspirée de
+  l’arabe), tous ces alphabets sont les descendants encore en vie de l’alphabet
+  phénicien, voire de son évolution en alphabet araméen.
+
+[carte-alphabets-2octets]: https://fr.wikipedia.org/wiki/Table_des_caractères_Unicode_(0000-FFFF)#Alphabets,_abjads,_abugidas_et_syllabaires_modernes
+
+*[API]: Alphabet Phonétique International
+
+On voit que l’UTF-8 est particulièrement intéressant pour les langues à alphabet
+latin[^importance-latin], qui bénéficient en plus de la compatibilité ASCII.
+Pour les alphabets grec, arabe ou cyrillique, UTF-8 ou UTF-16, c’est kif-kif ;
+on peut préférer UTF-16 pour sa plus grande constance, et l’économie qu’on
+réalise quand même sur quelques caractères moins fréquents. Pour tous les autres
+alphabets (dont les langues asiatiques), l’UTF-16 est préférable.
+
+[^importance-latin]:
+  qui, [d’après Wikipédia](https://fr.wikipedia.org/wiki/Alphabet_latin),
+  représenteraient tout de même 39 % de la population mondiale et 84 % des
+  connexions à Internet
+
+En plus d’être compatible avec l’ASCII, l’encodage UTF-8 a été conçu afin que
 certains algorithmes de traitement (comparaison lexicographique par exemple)
 soient réutilisables sans modification. Ainsi, de vieux programmes qui n’ont pas
 été conçus pour un autre encodage que l’ASCII fonctionneront aussi si on leur
@@ -224,5 +341,5 @@ Pour ne pas changer, voici notre texte d’exemple encodé en UTF-8 :
 Constat flagrant, la consommation de mémoire est singulièrement réduite par
 rapport à l’UTF-16 ! On peut aussi observer la compatibilité ASCII, et les
 caractères non-ASCII s’étendant sur plusieurs octets (ici symbolisés par `__`).
-Tous les caractères de latin-1 utilisent au plus deux octets, mais le
-caractère `…` en prend trois.
+Tous les caractères de latin-1 utilisent au plus deux octets, mais le caractère
+`…` en prend trois.

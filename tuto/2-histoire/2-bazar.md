@@ -152,7 +152,7 @@ libres (de 0x80 à 0x9F).
 | 
 | Sous Linux, le clavier est plus complet et la touche ||AltGr|| (ou
 | ||AltGr||+||Maj||) combinée avec les autres donne accès à de nombreux
-| caractères. Et si cela ne suffit pas, la [touche ||Compose||][compose] donne
+| caractères. Et si cela ne suffit pas, [la touche ||Compose||][compose] donne
 | accès à encore plus. Je vous laisse chercher !
 | 
 | -----
@@ -173,7 +173,7 @@ privilégie désormais le développement de l’Unicode.
 
 # ISO 2022 : du multi-octet pour les langues asiatiques
 
-_Pendant ce temps-là, en Asie…_
+-> _Pendant ce temps en Asie…_ <-
 
 Les langues latines s’en sont relativement bien tirées. Elles ont réussi à ne
 pas dépasser la limite fatidique de l’octet, ce qui reste quand même le plus

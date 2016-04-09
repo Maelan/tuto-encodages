@@ -1,26 +1,28 @@
-Voilà, j’espère que cet article aura aidé certains à comprendre ce qui se passe,
-et à ne plus avoir peur des « caractères spéciaux »…
+J’espère que cet article aura aidé certains à comprendre ce qui se passe, et à
+ne plus avoir peur des « caractères spéciaux »…
 
-Tout programmeur (voire tout informaticien) devrait connaître ça pour ne pas
-faire n’importe quoi. C’est un peu long mais il n’y a rien de sorcier.
+Il n’y a rien de sorcier et tout programmeur (voire tout informaticien) devrait
+connaître ça pour ne pas faire n’importe quoi.
 
 # Liens
 
-Quelques autres cours sur le sujet :
+Quelques autres documents sur le sujet :
 
 -   [« Ce que tout programmeur doit savoir »][joel-fr] (et [sa version
     anglaise][joel-en]) : un article de *Joel on Software* destiné à
     sensibiliser les programmeurs
 -   [« Introduction aux jeux de caractères »][openweb] : un cours de Steve
     Frécinaux sur le site Openweb
+-   [`charsets(7)`][man-charsets] : une page du manuel de Linux qui décrit les
+    encodages couramment utilisés avant leur remplacement progressif par Unicode
 
 Ensuite, Wikipédia est très bien fournie sur le thème (ne pas hésiter à lire les
 articles anglais qui sont souvent plus complets). On peut par exemple consulter
 [cet article général][wiki-codage], [celui-ci][UTF-8] pour apprendre comment
-fonctionne UTF-8, ou ce [comparatif des encodages Unicode][wiki-comparatif] (en
+fonctionne UTF-8, ou [ce comparatif des encodages Unicode][wiki-comparatif] (en
 anglais). Pour connaître le code d’un caractère dans un encodage particulier,
 elle fournit toutes les tables utiles de façon claire, par exemple : [ASCII][],
-[CP850][], *[latin-1][]*, et même le [JUC][] qui y est plutôt bien organisé.
+[CP850][], [latin-1][], et même le [JUC][] qui y est plutôt bien organisé.
 
 On peut aussi trouver les tables du JUC [ici][Unicode-JUC-fr], avec des glyphes
 informatifs et les noms officiels des caractères en français (car la norme
@@ -34,6 +36,7 @@ Enfin, [un outil pratique pour calculer l’UTF-8][outil-utf8].
 [joel-fr]: http://french.joelonsoftware.com/Articles/Unicode.html
 [joel-en]: http://joelonsoftware.com/Articles/Unicode.html
 [openweb]: http://openweb.eu.org/articles/jeux_caracteres
+[man-charsets]: http://man7.org/linux/man-pages/man7/charsets.7.html
 
 [wiki-codage]:     https://fr.wikipedia.org/wiki/Codage_des_caractères
 [wiki-comparatif]: https://en.wikipedia.org/wiki/Comparison_of_Unicode_encodings

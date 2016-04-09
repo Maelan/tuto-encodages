@@ -1,3 +1,19 @@
 version 1
 	version plus ou moins directement reprise du Site du Zéro, après
 	reformulations et adaptation au format de Zeste de Savoir
+
+version 2
+	— remaniement du plan :
+		+ déplacement des concepts de base dans une nouvelle partie 1-theorie
+		+ déplacement de la partie 3-aujourdhui comme sous‐partie de 2-histoire
+		+ déplacement d’explications dans l’intro de 3-pratique
+	— EBCDIC
+	— graphème ≠ point de code
+	— tableaux conso mémoire unicode
+	— discussion sur quel encodage unicode % langage
+	— SMS
+	— pratique : iconv
+	— pratique : utf8 corrompu
+	— pratique : entités XML
+	— man charsets
+	— corrections mineures

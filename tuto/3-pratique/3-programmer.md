@@ -1,5 +1,5 @@
-Lorsqu’on crée un programme, il faut bien sûr faire attention à l’encodage du
-texte qu’on manipule.
+Enfin, lorsqu’on crée un programme, il faut bien sûr faire attention à
+l’encodage du texte qu’on manipule !
 
 # Le langage C
 
@@ -70,15 +70,17 @@ veut de nos octets.
 | nouvelle page de code 1252, elle utilise toujours l’ancienne (850 ou 437) par
 | défaut. Un logiciel qui respecte la _locale_ écrit en Windows-1252 et ses
 | accents s’afficheraient mal dans la console. Pour y remédier, demander à
-| l’utilisateur qu’il fasse `CHCP 1252`, ou ajuster soi-même l’encodage de la
-| console avec les fonctions `setConsoleOutputCP` et `GetACP` définies dans
-| `<windows.h>`.
+| l’utilisateur qu’il fasse `CHCP 1252` ou, mieux, ajuster soi-même l’encodage
+| de la console avec les fonctions `setConsoleOutputCP` et `GetACP` définies
+| dans `<windows.h>`.
 
 Bref, pour un résultat portable et sans prise de tête, il est avisé d’utiliser
 une bibliothèque tierce. L’implémentation de référence est [la bibliothèque
-ICU][ICU], extrêmement complète.
+ICU][ICU], extrêmement complète. Également, j’ai déjà évoqué [l’API
+iconv][man3-iconv] intégrée à POSIX, pour les conversions d’encodages.
 
 [ICU]: https://fr.wikipedia.org/wiki/International_Components_for_Unicode
+[man3-iconv]: http://man7.org/linux/man-pages/man3/iconv.3.html
 
 Je ne m’étendrai pas plus sur le sujet. Si vous voulez pousser plus loin, j’ai
 donné des mots-clés pour guider vos recherches. Pour plus de détail sur la norme
