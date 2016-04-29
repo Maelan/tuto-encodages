@@ -14,4 +14,4 @@ Vous êtes curieux de savoir comment un ordinateur code du texte ?
 
 Ce cours est pour vous. On va tout expliquer en douceur.
 
-![Martine Ã©crit en UTF-8](archive:Martine.jpg)
+![Martine Ã©crit en UTF-8](http://zestedesavoir.com/media/galleries/2945/7421dbcb-90af-48fc-be74-b5b1750e4fb5.jpg)

@@ -10,7 +10,7 @@ La solution s’impose d’elle-même : créer un jeu de caractères universel 
 contienne tous les alphabets ! Cette idée toute simple a donné naissance à deux
 monuments : la norme ISO 10646 et Unicode.
 
-![logo d’Unicode](archive:Unicode-logo.jpg)
+![logo d’Unicode](http://zestedesavoir.com/media/galleries/2945/fd636340-71a2-42e3-bf51-5696fd8fd7d4.jpg)
 Figure: logo d’Unicode
 
 **Unicode** est une norme développée par le [consortium Unicode][Unicode] depuis
@@ -35,7 +35,7 @@ suffisant.
 | Devant une telle quantité, les polices d’écriture (qui n’ont rien à voir avec
 | les encodages, il s’agit ici d’**affichage** des caractères et non de leur
 | **codage** en mémoire) peinent à suivre. C’est ce qui explique les petits
-| symboles du type ![�](archive:Unicode-glyphe-inconnu.png) qu’on peut voir sur
+| symboles du type ![�](http://zestedesavoir.com/media/galleries/2945/c92d7034-311b-4f24-81b4-95595df2b8c3.png) qu’on peut voir sur
 | certaines pages (en regardant bien, vous lirez le code du caractère dans le
 | carré). Généralement, les auteurs de polices se contentent de créer les
 | glyphes des parties qui les intéressent, et parfois de copier les glyphes de
@@ -251,7 +251,7 @@ faire, ajoutons la BOM facultative :
 
     :::text
     texte :          [BOM] «____ ▒____ À____       v____ a____ i____ n____ c____ r____ e____       s____ a____ n____ s____       p____ é____ r____ i____ l____ …____ ▒____ »____
-    codage UTF-16 :  FE.FF 00.A0 00.A0 00.C0 00.20 00.76 00.61 00.69 00.6E 00.63 00.72 00.65 00.20 00.73 00.41 00.6E 00.73 00.41 00.70 00.E9 00.72 00.69 00.6C 20.26 00.A0 00.BB
+    codage UTF-16 :  FE.FF 00.AB 00.A0 00.C0 00.20 00.76 00.61 00.69 00.6E 00.63 00.72 00.65 00.20 00.73 00.41 00.6E 00.73 00.41 00.70 00.E9 00.72 00.69 00.6C 20.26 00.A0 00.BB
 
 Ici, la BOM indique que le texte est gros-boutiste (l’octet de poids fort est en
 premier). En petit-boutiste, on aurait ça :

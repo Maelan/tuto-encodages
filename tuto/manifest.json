@@ -1,87 +1,88 @@
 {
-	"version": 2,
-	"type": "TUTORIAL",
-	"title": "Comprendre les encodages",
-	"description": "ASCII, latin-1, Unicode, UTF-8… quésaco ?",
-	"licence": "CC BY-NC-SA",
-	"slug": "encodages",
-	"object": "container",
-	"introduction": "introduction.md",
-	"conclusion": "conclusion.md",
-	"children": [
-		{
-			"title": "La théorie : le texte en informatique",
-			"slug": "1-theorie",
-			"object": "container",
-			"introduction": "1-theorie/introduction.md",
-			"conclusion": "1-theorie/conclusion.md",
-			"children": [
-				{
-					"title": "Concepts",
-					"slug": "1-concepts",
-					"object": "extract",
-					"text": "1-theorie/1-concepts.md"
-				}
-			]
-		},
-		{
-			"title": "La grande épopée des encodages",
-			"slug": "2-histoire",
-			"object": "container",
-			"introduction": "2-histoire/introduction.md",
-			"conclusion": "2-histoire/conclusion.md",
-			"children": [
-				{
-					"title": "Au commencement était l’ASCII",
-					"slug": "1-ascii",
-					"object": "extract",
-					"text": "2-histoire/1-ascii.md"
-				},
-				{
-					"title": "La révolte gronde",
-					"slug": "2-bazar",
-					"object": "extract",
-					"text": "2-histoire/2-bazar.md"
-				},
-				{
-					"title": "Unicode, la solution ultime",
-					"slug": "3-unicode",
-					"object": "extract",
-					"text": "2-histoire/3-unicode.md"
-				},
-				{
-					"title": "Et aujourd’hui ?",
-					"slug": "4-aujourdhui",
-					"object": "extract",
-					"text": "2-histoire/4-aujourdhui.md"
-				}
-			]
-		},
-		{
-			"title": "En pratique : jongler avec les encodages",
-			"slug": "3-pratique",
-			"object": "container",
-			"introduction": "3-pratique/introduction.md",
-			"children": [
-				{
-					"title": "Lire & écrire avec le bon encodage",
-					"slug": "1-lire-ecrire",
-					"object": "extract",
-					"text": "3-pratique/1-lire-ecrire.md"
-				},
-				{
-					"title": "Déclarer l’encodage",
-					"slug": "2-declarer-encodage",
-					"object": "extract",
-					"text": "3-pratique/2-declarer-encodage.md"
-				},
-				{
-					"title": "Programmer",
-					"slug": "3-programmer",
-					"object": "extract",
-					"text": "3-pratique/3-programmer.md"
-				}
-			]
-		}
-	]
+    "object": "container", 
+    "slug": "comprendre-les-encodages", 
+    "title": "Comprendre les encodages", 
+    "introduction": "introduction.md", 
+    "conclusion": "conclusion.md", 
+    "children": [
+        {
+            "object": "container", 
+            "slug": "1-theorie", 
+            "title": "La théorie : le texte en informatique", 
+            "introduction": "1-theorie/introduction.md", 
+            "conclusion": "1-theorie/conclusion.md", 
+            "children": [
+                {
+                    "object": "extract", 
+                    "slug": "1-concepts", 
+                    "title": "Concepts", 
+                    "text": "1-theorie/1-concepts.md"
+                }
+            ]
+        }, 
+        {
+            "object": "container", 
+            "slug": "2-histoire", 
+            "title": "La grande épopée des encodages", 
+            "introduction": "2-histoire/introduction.md", 
+            "conclusion": "2-histoire/conclusion.md", 
+            "children": [
+                {
+                    "object": "extract", 
+                    "slug": "1-ascii", 
+                    "title": "Au commencement était l’ASCII", 
+                    "text": "2-histoire/1-ascii.md"
+                }, 
+                {
+                    "object": "extract", 
+                    "slug": "2-bazar", 
+                    "title": "La révolte gronde", 
+                    "text": "2-histoire/2-bazar.md"
+                }, 
+                {
+                    "object": "extract", 
+                    "slug": "3-unicode", 
+                    "title": "Unicode, la solution ultime", 
+                    "text": "2-histoire/3-unicode.md"
+                }, 
+                {
+                    "object": "extract", 
+                    "slug": "4-aujourdhui", 
+                    "title": "Et aujourd’hui ?", 
+                    "text": "2-histoire/4-aujourdhui.md"
+                }
+            ]
+        }, 
+        {
+            "object": "container", 
+            "slug": "3-pratique", 
+            "title": "En pratique : jongler avec les encodages", 
+            "introduction": "3-pratique/introduction.md", 
+            "conclusion": "3-pratique/conclusion.md", 
+            "children": [
+                {
+                    "object": "extract", 
+                    "slug": "1-lire-ecrire", 
+                    "title": "Lire & écrire avec le bon encodage", 
+                    "text": "3-pratique/1-lire-ecrire.md"
+                }, 
+                {
+                    "object": "extract", 
+                    "slug": "2-declarer-encodage", 
+                    "title": "Déclarer l’encodage", 
+                    "text": "3-pratique/2-declarer-encodage.md"
+                }, 
+                {
+                    "object": "extract", 
+                    "slug": "3-programmer", 
+                    "title": "Programmer", 
+                    "text": "3-pratique/3-programmer.md"
+                }
+            ]
+        }
+    ], 
+    "version": 2, 
+    "description": "ASCII, latin-1, Unicode, UTF-8… quésaco ?", 
+    "type": "TUTORIAL", 
+    "licence": "CC BY-NC-SA"
 }

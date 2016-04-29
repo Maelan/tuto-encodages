@@ -17,3 +17,12 @@ version 2
 	— pratique : entités XML
 	— man charsets
 	— corrections mineures
+
+version 3
+	— utilisation de l’archive exportée par le site (URL des images substituées)
+	— typo dans les codes d’exemple pour latin-1 et UTF-16 (guillemet = 0xAB et
+	  non 0xA0) (remarque de validation)
+	— reformulation dans la partie sur iconv (remarque de validation)
+	— ajout du script de Taurre (remarque de validation)
+	— `recode ..dump-with-names` → `recode ..dump`
+	— 2 typos

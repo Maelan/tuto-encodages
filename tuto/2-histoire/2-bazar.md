@@ -108,7 +108,7 @@ aux règles typographiques :
 
     :::text
     texte :           «  ▒  À     v  a  i  n  c  r  e     s  a  n  s     p  é  r  i  l  .  .  .  ▒  »
-    codage latin-1 :  A0 A0 C0 20 76 61 69 6E 63 72 65 20 73 41 6E 73 41 70 E9 72 69 6C 2E 2E 2E A0 BB
+    codage latin-1 :  AB A0 C0 20 76 61 69 6E 63 72 65 20 73 41 6E 73 41 70 E9 72 69 6C 2E 2E 2E A0 BB
 
 Les codes de 0x00 à 0x1F et 0x7F (les caractères de contrôle ASCII) et de 0x80 à
 0x9F sont laissés inutilisés par la norme 8859. Pour les communications

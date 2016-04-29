@@ -7,14 +7,14 @@ La plupart du temps, lire une page web ne pose aucun souci car son encodage est
 précisé dans son code source. Il arrive toutefois que ce ne soit pas fait, ou
 mal fait, et que le navigateur échoue à le deviner. Par exemple :
 
-![Exemple de page lue avec un mauvais encodage](archive:écran-Firefox-1.png)
+![Exemple de page lue avec un mauvais encodage](http://zestedesavoir.com/media/galleries/2945/1adbca06-54f4-4077-897b-bc16ba78cb92.png)
 Figure: Exemple de page lue avec un mauvais encodage
 
 C’est moche. C’est désagréable à lire. Heureusement, on peut y remédier
 manuellement. Tout navigateur qui se respecte permet de jongler entre les
 encodages. Pour Firefox, le menu est caché sous « Affichage » :
 
-![Menu des encodages dans Firefox](archive:écran-Firefox-2-rogné.png)
+![Menu des encodages dans Firefox](http://zestedesavoir.com/media/galleries/2945/e3fb4b6c-ae65-4c30-9586-b3dcafd6905c.png)
 Figure: Menu des encodages dans Firefox
 
 Pour l’instant, le navigateur est en « détection automatique », ce qui a conduit
@@ -23,7 +23,7 @@ page est probablement en UTF-8 (ça ressemble à l’erreur vue en introduction)
 donc on essaie cet encodage. On choisit l’option correspondante dans le menu,
 et…
 
-![Tadaam !](archive:écran-Firefox-3.png)
+![Tadaam !](http://zestedesavoir.com/media/galleries/2945/697a1a1c-ed7c-4889-839f-1fc88ab5c24e.png)
 Figure: Tadaam !
 
 La page s’affiche correctement. C’est du beau boulot.
@@ -35,7 +35,7 @@ texte digne de ce nom permet de le faire de façon précise… mais commençons 
 le Bloc-Notes de Windows. Ouvrons le Bloc-Notes, tapons un peu de texte avec des
 accents, puis enregistrons.
 
-![Boîte de dialogue d’enregistrement du Bloc-Notes](archive:écran-BlocNotes.png)
+![Boîte de dialogue d’enregistrement du Bloc-Notes](http://zestedesavoir.com/media/galleries/2945/eff7b79e-04b8-4301-95b1-d720ba4992b2.png)
 Figure: Boîte de dialogue d’enregistrement du Bloc-Notes
 
 Le Bloc-Notes permet au premier enregistrement de choisir l’encodage du fichier.
@@ -57,7 +57,7 @@ les fichiers que je viens de créer avec le Bloc-Notes) :
 
 [Notepad++]: http://notepad-plus-plus.org/fr/
 
-![Le menu des encodages dans Notepad++](archive:écran-Notepad++-1-déco.png)
+![Le menu des encodages dans Notepad++](http://zestedesavoir.com/media/galleries/2945/66a2482b-725b-4057-9a31-13c52d68ea4b.png)
 Figure: Le menu des encodages dans Notepad++
 
 Première remarque, Notepad++ détecte automatiquement l’encodage et l’indique
@@ -78,7 +78,7 @@ Enfin, on a quand même plus de choix que dans le Bloc-Notes !
 Après cet aperçu, faites un tour dans la configuration de votre éditeur. Il y a
 certainement des options qui nous intéressent.
 
-![Fenêtre de configuration de Notepad++](archive:écran-Notepad++-2-déco.png)
+![Fenêtre de configuration de Notepad++](http://zestedesavoir.com/media/galleries/2945/1de37a7c-51fe-4650-903d-adeb051c348b.png)
 Figure: Fenêtre de configuration de Notepad++
 
 Ici, j’ai encadré la partie intéressante en vert. On peut choisir l’encodage (et
@@ -133,15 +133,14 @@ On observe la BOM (U+FEFF) qui nous dit que l’encodage est petit-boutiste, et
 les octets nuls insérés _après_ chaque octet de latin-1.
 
 [[attention]]
-| Attention lorsque vous essayez de modifier un fichier en place ; la commande
-| suivante :
+| Attention, pour modifier un fichier en place, il ne faut surtout pas faire :
 |
 |     :::console
 |     $  commande  < fichier > fichier
 |
-| effacera le contenu du fichier… Il faut passer par un fichier temporaire. De
-| toute façon, il est plus prudent de vérifier le résultat avant d’écraser le
-| fichier.
+| car cela effacerait le contenu du fichier… Il faut passer par un fichier
+| temporaire. De toute façon, il est plus prudent de vérifier le résultat
+| avant d’écraser le fichier.
 
 Il existe aussi le programme [`recode`][man1-recode], qui s’utilise de façon
 similaire :
@@ -181,7 +180,7 @@ par la séquence 0x0D, 0x0A (CR-LF).
 `recode` a aussi une foncton très pratique pour examiner du texte !
 
     :::console
-    $  echo "déjà, 한"  | recode ..dump-with-names
+    $  echo "déjà, 한"  | recode ..dump
     UCS2   Mné   Description
 
     0064   d     lettre minuscule latine d
@@ -197,8 +196,8 @@ par la séquence 0x0D, 0x0A (CR-LF).
 
 # Corriger un encodage mixte
 
-Il arrive qu’un fichier mélange plusieurs encodages, comme l’UTF-8 et le latin1.
-Ce peut être le cas d’un fichier texte récupérés sur Internet, ou de la base de
+Il arrive qu’un fichier mélange plusieurs encodages, comme l’UTF-8 et le latin-1.
+Ce peut être le cas d’un fichier texte récupéré sur Internet, ou de la base de
 données d’un site web. Démonstration :
 
     :::console
@@ -245,7 +244,7 @@ C’est bien une erreur, qui fait planter des programmes plus stricts :
     ligne encod
     recode: Entrée invalide dans « UTF-8..CHAR »
 
-`iconv` a peut ignorer les erreurs, mais ce n’est pas idéal :
+`iconv` peut ignorer les erreurs, mais ce n’est pas idéal :
 
     :::console
     $  cat test  | iconv -f utf8 -t //IGNORE
@@ -266,3 +265,28 @@ pour ça, mais ce n’est pas difficile à coder. Vous pouvez par exemple jeter 
     00000020  63 6f 64 c3 a9 65 20 65  6e 20 6c 61 74 69 6e 2d  |cod..e en latin-|
     00000030  31 0a                                             |1.|
 
+Ou alors, ce script interactif (suggéré par [Taurre][]) qui demande l’encodage
+d’origine de chaque ligne et convertit tout en UTF-8 :
+
+    :::sh
+    #!/bin/sh
+    last=utf8
+    while read line ; do
+    	echo "$line" | od -c -w256 >&2
+    	read -p "encodage ? [$last] " code </dev/tty >&2
+    	last="${code:-$last}"
+    	echo "$line" | iconv -f "$last" -t utf8
+    done
+
+Exemple d’utilisation :
+
+    :::console
+    $  ./convert-mixed.sh < test > test-corrigé
+    0000000   l   i   g   n   e       e   n   c   o   d 303 251   e       e   n       U   T   F   -   8  \n
+    0000030
+    Quel encodage ? [utf8] 
+    0000000   l   i   g   n   e       e   n   c   o   d 351   e       e   n       l   a   t   i   n   -   1  \n
+    0000031
+    Quel encodage ? [utf8] latin1
+
+[Taurre]: https://zestedesavoir.com/membres/voir/Taurre
