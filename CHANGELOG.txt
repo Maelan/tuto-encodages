@@ -26,3 +26,10 @@ version 3
 	— ajout du script de Taurre (remarque de validation)
 	— `recode ..dump-with-names` → `recode ..dump`
 	— 2 typos
+
+version 4
+	— terminologie (remarque de validation)
+	— remarque sur les graphèmes dans 1-theorie/1-concepts
+	— précisions sur ISO 2022
+	— reformulations
+	— « La grande épopée des encodages » → « L’épopée des encodages »

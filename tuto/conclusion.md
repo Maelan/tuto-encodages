@@ -19,10 +19,10 @@ Quelques autres documents sur le sujet :
 Ensuite, Wikipédia est très bien fournie sur le thème (ne pas hésiter à lire les
 articles anglais qui sont souvent plus complets). On peut par exemple consulter
 [cet article général][wiki-codage], [celui-ci][UTF-8] pour apprendre comment
-fonctionne UTF-8, ou [ce comparatif des encodages Unicode][wiki-comparatif] (en
-anglais). Pour connaître le code d’un caractère dans un encodage particulier,
-elle fournit toutes les tables utiles de façon claire, par exemple : [ASCII][],
-[CP850][], [latin-1][], et même le [JUC][] qui y est plutôt bien organisé.
+fonctionne UTF-8, ou [ce comparatif des encodages d’Unicode][wiki-comparatif]
+(en anglais). Elle contient les tables de codes de tous les jeux utiles, par
+exemples : [ASCII][], [CP850][], [latin-1][], et même le [JUC][] qui y est
+plutôt bien organisé.
 
 On peut aussi trouver les tables du JUC [ici][Unicode-JUC-fr], avec des glyphes
 informatifs et les noms officiels des caractères en français (car la norme

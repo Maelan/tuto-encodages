@@ -2,7 +2,7 @@ L’un des premiers encodages historiques est l’**ASCII**, soit l’_American
 Standard Code for Information Interchange_ (en français, le « code américain
 normalisé pour l’échange d’informations »). C’est une norme étasunienne,
 inventée en 1961, qui avait pour but d’organiser le bazar informatique à
-l’échelle nationale. Ce n’est donc pas le premier encodage existant, mais il
+l’échelle nationale. Ce n’est donc pas le premier codage de l’Histoire, mais il
 s’est imposé au point d’éclipser les précédents.[^EBCDIC]
 
 *[ASCII]: American Standard Code for Information Interchange
@@ -15,18 +15,16 @@ s’est imposé au point d’éclipser les précédents.[^EBCDIC]
 
 [EBCDIC]: https://fr.wikipedia.org/wiki/EBCDIC
 
-Le terme « ASCII » est souvent employé de manière incorrecte pour désigner des
-encodages qui étendent l’ASCII ou qui en dérivent.
+Le terme « ASCII » est souvent employé incorrectement pour désigner des pages de
+code qui étendent l’ASCII ou qui en dérivent.
 
-Le jeu de caractères ASCII utilise **sept bits** (et non huit !) et dispose donc
-de 128 (2^7^) caractères uniquement, numérotés de 0 à 127. En effet, à l’époque,
-il était encore courant de regrouper les bits par sept et non par huit, ou alors
-de réserver le huitième bit pour vérifier l’intégrité des données (bit de
-parité).
+L’ASCII proprement dit utilise **sept bits** (et non huit !) et dispose donc de
+128 (2^7^) caractères uniquement, numérotés de 0 à 127. En effet, à l’époque, il
+était encore courant de regrouper les bits par sept et non par huit, ou alors de
+réserver le huitième bit pour vérifier l’intégrité des données (bit de parité).
 
-Sans plus attendre, voici la table de l’ASCII. Chaque case correspond à l’un des
-128 caractères de l’ASCII rangés dans l’ordre. Pour retrouver le code associé à
-un caractère, il faut mettre bout à bout le chiffre _hexadécimal_ de sa ligne et
+Sans plus attendre, voici la table de l’ASCII. Pour trouver le code d’un
+caractère, il faut mettre bout à bout le chiffre _hexadécimal_ de sa ligne et
 celui de sa colonne. Ainsi le caractère `Z` a pour code hexadécimal 0x5A (soit
 90 en décimal).
 
@@ -118,7 +116,7 @@ exemples :
     cette suppression.
 -   Les lettres majuscules sont séparées de leurs homologues minuscules par un
     intervalle de 32. Cela signifie qu’il suffit de modifier un bit (le sixième)
-    pour passer des unes aux autres, ce qui simplifie les traitements.
+    pour passer des unes aux autres.
 
 Pour plus de détails, consultez [l’article de Wikipédia][ASCII].
 

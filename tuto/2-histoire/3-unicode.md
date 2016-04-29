@@ -1,12 +1,13 @@
 Avec des normes comme ISO 8859 et ISO 2022, le problème d’interropérabilité
 était à moitié résolu. On avait certes normalisé les communications entre
 langues voisines, mais le système conservait des limites. Comment transmettre un
-texte si l’encodage du destinataire ne contient pas tous les caractères
-nécessaires (envoyer de l’arabe à un français p.ex.) ? Comment écrire un texte
-contenant des caractères de plusieurs alphabets, s’il n’existe pas d’encodage
-qui les regroupe simultanément (arabe et russe p.ex.) ?
+texte (envoyer de l’arabe à un français p·ex·) si le jeu du destinataire ne
+contient pas tous les caractères nécessaires ? Comment écrire un texte avec des
+caractères de plusieurs alphabets (arabe et russe p·ex·), s’il n’existe pas de
+jeu qui les contienne simultanément ? ISO 2022 constituait une réponse à ces
+problèmes, mais on a vu qu’elle était loin d’être idéale.
 
-La solution s’impose d’elle-même : créer un jeu de caractères universel qui
+La solution s’impose d’elle-même : créer un jeu de caractères universel, qui
 contienne tous les alphabets ! Cette idée toute simple a donné naissance à deux
 monuments : la norme ISO 10646 et Unicode.
 
@@ -24,8 +25,8 @@ dans la norme parallèle **ISO 10646**.
 
 # Le jeu universel de caractères
 
-L’objectif de ce jeu est d’accueillir tous les caractères existants de toutes
-les langues du monde, actuelles ou passées. Un travail titanesque !
+L’objectif de ce répertoire est d’accueillir tous les caractères existants de
+toutes les langues du monde, actuelles ou passées. Un travail titanesque !
 Concrètement, c’est un bête jeu de caractères, sauf que celui-ci offre pas moins
 de 17×2^16^ = 1 114 112 codes. À l’origine, il prévoyait même
 2^31^ = 2 147 483 648 codes, mais il a vite été restreint : c’est déjà bien
@@ -45,8 +46,8 @@ suffisant.
 
 [musique-grecque]: https://fr.wikipedia.org/wiki/Table_des_caractères_Unicode/U1D200
 
-En juin 2015, environ 11 % des codes sont déjà attribués à des caractères (en
-grande partie des idéogrammes asiatiques). Il reste encore de la place à
+En juin 2015, environ 11 % des codes sont déjà attribués à des caractères — en
+grande partie des idéogrammes asiatiques. Il reste encore de la place à
 revendre. Et pourtant, dans ces 11 %, on a tout mis ou presque : les caractères
 de tous les anciens jeux, tous les alphabets modernes, pléthore de symboles… Le
 JUC n’est peut-être pas la solution définitive et éternelle, mais on peut dormir
@@ -79,20 +80,21 @@ alphabétique, et des encodages pour transcrire le JUC.
 
 # Graphèmes _vs_ points de code
 
-Depuis le début, je parle de « caractères ». En fait, pour Unicode, je devrais
-dire **points de code**. Les « vrais » caractères sont appelés **graphèmes**.
-Par exemple, pour écrire le graphème `é` (e accent aigu), je peux utiliser le
-caractère « précomposé » U+00E9 (hérité de latin-1), mais aussi la séquence
-U+0065, U+0301. U+0065 est le caractère de base (`e`, la lettre e) et U+0301 est
-une diacritique (` ́`, l’accent aigu) ; les deux se **composent** pour former un
-seul graphème. Ce sont deux codages possibles du *même* graphème, qui doivent
-donc être considérés comme équivalents.
+J’avais évoqué en introduction la nuance entre graphème et caractère (qu’on
+appelle aussi **point de code** pour éviter les ambigüités). Cette distinction
+importe en Unicode, à cause d’un mécanisme appelé **composition**.
+
+Pour écrire le graphème `é` (e accent aigu), je peux utiliser le caractère
+« précomposé » U+00E9 (hérité de latin-1), mais aussi la séquence U+0065,
+U+0301. U+0065 est le caractère de base (`e`, la lettre e) et U+0301 est une
+diacritique (` ́`, l’accent aigu) ; les deux se composent pour former un seul
+graphème. Ce sont deux codages possibles du *même* graphème, qui doivent donc
+être considérés comme équivalents.
 
 [[information]]
-| En pratique, la composition de points de code est peu utilisée pour les
-| alphabets latins car on a hérité des caractères précomposés des jeux
-| précédents ; et, de fait, les systèmes de rendu les gèrent assez mal. Testons
-| le navigateur :
+| En pratique, la composition est peu utilisée pour les alphabets latins car on
+| a hérité des caractères précomposés des jeux précédents ; et, de fait, les
+| systèmes de rendu les gèrent assez mal. Testons le navigateur :
 | 
 |     é (U+00E9)
 |     é (U+0065, U+0301)
@@ -126,17 +128,16 @@ donc être considérés comme équivalents.
 
 Ces particularités d’Unicode ont plusieurs conséquences :
 
-1.  Le mécanisme de composition implique que les graphèmes ne sont en vérité pas
-    codés avec une taille fixe, et ce même si les points de code le sont (ce qui
-    n’est pas le cas, comme on verra).
+1.  Le mécanisme de composition implique que les graphèmes ne sont *pas* codés
+    avec une taille fixe, et ce même si les points de code le sont (ce qui n’est
+    pas le cas, comme on verra).
 1.  L’existence de caractères précomposés implique que le codage des graphèmes
-    n’est pas unique. La norme Unicode définit les équivalences entre codages,
-    ainsi que des algorithmes pour calculer une forme normale.
+    n’est pas unique. Unicode définit les équivalences entre codages, ainsi que
+    des algorithmes pour calculer une forme normale.
 
 Une application soigneuse doit prendre en compte tout ceci. Toutefois, je ne
 développerai pas plus sur ce sujet, cet article se focalisant surtout sur les
-encodages. Dans la suite, je continuerai néanmoins à dire « caractère » au lieu
-de « point de code », puissent les puristes me pardonner.
+encodages.
 
 # Un jeu, des encodages
 
@@ -145,7 +146,7 @@ Comme je l’ai dit, Unicode définit plusieurs encodages du JUC.
 [[question]]
 | Des encodages ? Mais, je croyais qu’Unicode *était* un encodage ?
 
-Unicode est basiquement un **jeu de caractères** (un ensemble de caractères
+Unicode est essentiellement un **jeu de caractères** (un ensemble de caractères
 auxquels on attribue à chacun un point de code unique) et non un **encodage**
 (façon de représenter ce point de code en mémoire). C’est ici que la distinction
 prend tout son sens. Auparavant, les deux se confondaient puisque tous les jeux
@@ -317,9 +318,8 @@ alphabets (dont les langues asiatiques), l’UTF-16 est préférable.
 
 En plus d’être compatible avec l’ASCII, l’encodage UTF-8 a été conçu afin que
 certains algorithmes de traitement (comparaison lexicographique par exemple)
-soient réutilisables sans modification. Ainsi, de vieux programmes qui n’ont pas
-été conçus pour un autre encodage que l’ASCII fonctionneront aussi si on leur
-passe du texte en UTF-8 : magique !
+soient réutilisables sans modification. Ainsi, de vieux programmes
+fonctionneront encore si on leur passe du texte en UTF-8 : magique !
 
 Enfin, contrairement à l’UTF-16, on n’a pas de problème de boutisme puisqu’on
 lit les données octet par octet.
@@ -327,10 +327,9 @@ lit les données octet par octet.
 UTF-8 a de nombreux avantages (économie de mémoire, compatibilité, boutisme,
 résistance aux erreurs). Un défaut aussi : la grande variabilité de taille des
 caractères rend les traitements plus compliqués et nuit à leurs performances.
-Ses points forts ont cependant suffi à lui assurer le succès : il est
-probablement l’encodage le plus répandu aujourd’hui. Il est utilisé pour les
-documents et les communications, et les systèmes d’exploitation (Mac et Linux)
-s’y mettent aussi.
+Ses points forts ont cependant suffi à lui assurer le succès : il est l’encodage
+le plus répandu aujourd’hui. Il est utilisé pour les documents et les
+communications, et les systèmes d’exploitation (Mac et Linux) s’y mettent aussi.
 
 Pour ne pas changer, voici notre texte d’exemple encodé en UTF-8 :
 

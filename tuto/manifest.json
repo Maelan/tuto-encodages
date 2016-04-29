@@ -23,7 +23,7 @@
         {
             "object": "container", 
             "slug": "2-histoire", 
-            "title": "La grande épopée des encodages", 
+            "title": "L’épopée des encodages", 
             "introduction": "2-histoire/introduction.md", 
             "conclusion": "2-histoire/conclusion.md", 
             "children": [

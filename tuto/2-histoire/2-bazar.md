@@ -10,12 +10,12 @@ D’autres restent sur sept bits, et modifient carrément les 128 caractères de
 l’ASCII pour leur propres besoins.
 
 On imagine la pagaille que ça a été, lorsque chaque pays s’est mis à éditer sa
-propre page de code. Ça fonctionnait bien tant que les documents ne quittaient
-pas la zone où leur propre encodage était en usage, mais les échanges
-internationaux étaient sujets à problèmes. Comme un même code signifiait des
-caractères différents d’un jeu à l’autre, le récepteur ne lisait pas la même
-chose que l’expéditeur. Par exemple, le symbole du dollar (`$`) aux États-Unis
-devenait celui de la livre (`£`) au Royaume-Uni : dégâts assurés !
+propre page de code. Ça fonctionnait bien tant que les documents restaient dans
+la zone où leur propre encodage était en usage, mais les échanges internationaux
+étaient sujets à problèmes. Comme un même code signifiait des caractères
+différents d’une page à l’autre, le récepteur ne lisait pas la même chose que
+l’expéditeur. Par exemple, le symbole du dollar (`$`) aux États-Unis devenait
+celui de la livre (`£`) au Royaume-Uni : dégâts assurés !
 
 Il y a bien eu des tentatives de stopper la multiplication des pages de code,
 mais elles ont été insuffisantes. L’exemple le plus significatif en est la norme
@@ -45,18 +45,18 @@ Cette norme a principalement servi aux langues latines d’Europe pour mettre au
 point une page de code commune. À elles seules, elles utilisent en tout dix
 parties d’ISO 8859, parfois appelées « latin-1 », « latin-2 », etc. ; la
 première est la principale et les suivantes en sont des évolutions visant à
-compléter la prise en charge de certaines langues. En voici deux à connaître :
+améliorer la prise en charge de certaines langues. En voici deux à connaître :
 
--   **ISO 8859-1 (« latin-1 » ou « Occidental »)** est un encodage très courant
-    dans les pays latins et sur la Toile. C’est l’encodage utilisé initialement
-    par les distributions Linux, mais elles migrent progressivement vers l’UTF-8
-    qu’on verra plus tard. Les systèmes Windows utilisent également un jeu
-    dérivé, comme on le verra bientôt. Il a l’avantage de permettre d’écrire
-    _grosso modo_ toutes les langues latines, et ceci avec des caractères d’un
-    octet seulement.
+-   **ISO 8859-1 (« latin-1 » ou « Occidental »)** est une page de code très
+    courante dans les pays latins et sur la Toile. C’est l’encodage utilisé
+    initialement par les distributions Linux, mais elles migrent progressivement
+    vers l’UTF-8 qu’on verra plus tard. Les systèmes Windows utilisent également
+    un jeu dérivé, comme on le verra bientôt. Il a l’avantage de permettre
+    d’écrire _grosso modo_ toutes les langues latines, et ceci avec un octet par
+    caractère seulement.
 -   **ISO 8859-15 (« latin-9 » ou « Occidental (euro) »)**, datant de 1998,
     introduit le signe de l’euro (`€`) et complète le support de quelques
-    langues dont le français (avec `Œ`) en abandonnant des symboles peu utilisés
+    langues dont le français (avec `Œ`) en abandonnant des symboles peu usités
     (dont le mystérieux `¤` signifiant « monnaie »). Il est néanmoins moins
     utilisé que son grand frère ci-dessus.
 
@@ -113,8 +113,7 @@ aux règles typographiques :
 Les codes de 0x00 à 0x1F et 0x7F (les caractères de contrôle ASCII) et de 0x80 à
 0x9F sont laissés inutilisés par la norme 8859. Pour les communications
 Internet, l’[IANA][] a créé la norme ISO-8859 (attention, c’est le tiret qui
-change tout !). Celle-ci reprend ISO 8859 et ajoute des caractères de contrôle
-aux emplacements libres.
+change tout !), qui ajoute des caractères de contrôle à ces emplacements.
 
 [IANA]: https://fr.wikipedia.org/wiki/IANA
 
@@ -177,20 +176,35 @@ privilégie désormais le développement de l’Unicode.
 
 Les langues latines s’en sont relativement bien tirées. Elles ont réussi à ne
 pas dépasser la limite fatidique de l’octet, ce qui reste quand même le plus
-pratique à la fois pour les traitements et la consommation mémoire. Mais les
-langues asiatiques comme le japonais, le coréen ou le chinois disposent de bien
-trop de caractères pour que tout tienne sur huit bits. Les encodages mis au
-point en Asie de l’Est étaient donc **multi-octet**. Certains utilisaient deux
-octets, ce qui permet 65 536 (2^16^) codes différents.
+pratique à la fois pour les traitements et pour la consommation de mémoire. Mais
+les langues asiatiques — japonais, coréen et chinois — disposent de bien trop de
+caractères pour que tout tienne sur huit bits. Les encodages mis au point en
+Asie de l’Est étaient donc **multi-octet**. Certains utilisaient deux octets par
+caractère, ce qui offre 65 536 (2^16^) codes différents.
 
 Comme pour les langues latines, une norme a été mise au point pour les
-organiser, on l’appelle **ISO 2022**. C’est un concept un peu spécial. Il permet
-de jongler entre plusieurs pages de code à l’aide de « séquences d’échappement »
-codées sur trois octets (parfois quatre) et commençant par le caractère ASCII
-||ESC|| (0x1B) ; celles-ci indiquent aux programmes quelle page de code il faut
-utiliser pour interpréter ce qui suit. Les différentes pages de codes sont
-totalement indépendantes et peuvent utiliser un octet ou deux par caractère.
+organiser, on l’appelle **ISO 2022**. Elle permet de jongler entre plusieurs
+jeux à l’aide de séquences d’échappement ; celles-ci indiquent le jeu utilisé
+dans ce qui suit.
 
-ISO 2022 a été utilisé pour le chinois (ISO 2022-CN), le coréen (ISO 2022-KR) et
-le japonais (ISO 2022-JP). Ces encodages, surtout le japonais, restent encore
-assez répandus mais l’Unicode se développe.
+On peut ainsi employer plusieurs jeux différents dans une même chaîne de
+caractères. En fait, la norme distingue une plage de codes pour les octets 0 à
+127, une autre pour les octets 128 à 255, et permet d’assigner un jeu à chaque
+plage de façon indépendante. Ainsi, on peut même employer deux jeux
+simultanément (par exemples ASCII et kanjis japonais, ou sinogrammes et
+latin-1) ! Ou alors, en n’utilisant que la première plage, on peut faire passer
+du texte dans un vieux système à sept bits.
+
+Les différents jeux sont totalement indépendants ; ils n’ont même pas à faire la
+même taille ! Certains requièrent un octet par caractère, d’autres deux.
+
+En théorie, ISO 2022 est une norme universelle puisqu’elle permet de passer d’un
+encodage arbitraire à un autre. Elle contient d’ailleurs ISO 8859. Toutefois,
+elle a plusieurs défauts, dont sa complexité et sa nature d’encodage *à état* :
+non seulement les caractères n’ont pas une taille fixe, mais en plus il faut
+absolument lire le texte depuis le début pour interpréter les octets !
+
+En pratique, les occidentaux n’ont donc pas adopté ISO 2022, qui n’a servi que
+pour le chinois (ISO 2022-CN), le coréen (ISO 2022-KR) et le japonais
+(ISO 2022-JP). Ces variantes restent encore répandues, surtout la japonaise,
+mais l’Unicode gagne du terrain.
