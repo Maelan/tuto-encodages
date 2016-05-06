@@ -1,6 +1,6 @@
-Quoi retenir ?
+Que retenir ?
 
--   Le principe du stockage de texte en informatique : jeux de caractères et
+-   Le principe du codage du texte en informatique : jeux de caractères et
     encodages.
 -   Qu’un caractère **n’est pas** un octet. Ni même un nombre fixe d’octets. Que
     les programmeurs se le disent !

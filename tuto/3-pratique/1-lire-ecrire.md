@@ -273,7 +273,7 @@ d’origine de chaque ligne et convertit tout en UTF-8 :
     last=utf8
     while read line ; do
     	echo "$line" | od -c -w256 >&2
-    	read -p "encodage ? [$last] " code </dev/tty >&2
+    	read -p "Quel encodage ? [$last] " code </dev/tty >&2
     	last="${code:-$last}"
     	echo "$line" | iconv -f "$last" -t utf8
     done

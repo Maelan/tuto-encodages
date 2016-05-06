@@ -53,8 +53,8 @@ de tous les anciens jeux, tous les alphabets modernes, pléthore de symboles… 
 JUC n’est peut-être pas la solution définitive et éternelle, mais on peut dormir
 sur nos deux oreilles pour les décennies à venir.
 
-Par souci de compatibilité, le JUC reprend latin-1 (donc l’ASCII) pour ses 256
-premiers caractères.
+Par souci de compatibilité, le JUC reprend latin-1 (et donc l’ASCII) pour ses
+256 premiers caractères.
 
 Le jeu n’est pas définitif : de nouveaux caractères sont régulièrement créés et
 assignés à des codes encore libres. Cependant, les caractères déjà en place ne
@@ -75,8 +75,8 @@ bougent plus.
 On peut voir Unicode comme une surcouche d’ISO 10646. ISO 10646 liste les
 caractères du jeu en leur assignant un nom et un code. Unicode leur ajoute des
 attributs et des relations. Unicode décrit aussi des algorithmes de traitement
-notamment pour les codages équivalents, les sens d’écriture et l’ordre
-alphabétique, et des encodages pour transcrire le JUC.
+notamment pour les codages équivalents, les sens d’écriture, l’ordre
+alphabétique et les encodages pour transcrire le JUC.
 
 # Graphèmes _vs_ points de code
 
@@ -88,7 +88,7 @@ Pour écrire le graphème `é` (e accent aigu), je peux utiliser le caractère
 « précomposé » U+00E9 (hérité de latin-1), mais aussi la séquence U+0065,
 U+0301. U+0065 est le caractère de base (`e`, la lettre e) et U+0301 est une
 diacritique (` ́`, l’accent aigu) ; les deux se composent pour former un seul
-graphème. Ce sont deux codages possibles du *même* graphème, qui doivent donc
+graphème. Ce sont deux codages possibles du *même* graphème, ils doivent donc
 être considérés comme équivalents.
 
 [[information]]
@@ -109,7 +109,7 @@ graphème. Ce sont deux codages possibles du *même* graphème, qui doivent donc
 | `한` est la syllabe _han_, composée des trois lettres `ㅎ` (_h_), `ㅏ` (_a_)
 | et `ㄴ` (_n_). Unicode inclut les lettres du hangeul (dont 51 sont encore
 | d’actualité et de nombreuses autres optionnelles), avec pour chacune une
-| [version isolée][hangeul-isolées], et plusieurs [versions
+| [version isolée][hangeul-isolées] et plusieurs [versions
 | composables][hangeul-composables] (selon la position dans la syllabe :
 | initiale, médiane, finale). Cependant, Unicode inclut également les [syllabes
 | précomposées][hangeul-syllabes] (utiles), évidemment beaucoup plus nombreuses
@@ -128,9 +128,9 @@ graphème. Ce sont deux codages possibles du *même* graphème, qui doivent donc
 
 Ces particularités d’Unicode ont plusieurs conséquences :
 
-1.  Le mécanisme de composition implique que les graphèmes ne sont *pas* codés
-    avec une taille fixe, et ce même si les points de code le sont (ce qui n’est
-    pas le cas, comme on verra).
+1.  Le mécanisme de composition implique que, même si les points de code sont
+    encodés avec une taille fixe — ce qui n’est pas le cas, comme on verra —,
+    les graphèmes ont, eux, une taille variable !
 1.  L’existence de caractères précomposés implique que le codage des graphèmes
     n’est pas unique. Unicode définit les équivalences entre codages, ainsi que
     des algorithmes pour calculer une forme normale.
@@ -259,7 +259,7 @@ premier). En petit-boutiste, on aurait ça :
 
     :::text
     texte :          [BOM] «____ ▒____ À____       v____ a____ i____ n____ c____ r____ e____       s____ a____ n____ s____       p____ é____ r____ i____ l____ …____ ▒____ »____
-    codage UTF-16 :  FF.FE A0.00 A0.00 C0.00 20.00 76.00 61.00 69.00 6E.00 63.00 72.00 65.00 20.00 73.00 41.00 6E.00 73.00 41.00 70.00 E9.00 72.00 69.00 6C.00 26.20 A0.00 BB.00
+    codage UTF-16 :  FF.FE AB.00 A0.00 C0.00 20.00 76.00 61.00 69.00 6E.00 63.00 72.00 65.00 20.00 73.00 41.00 6E.00 73.00 41.00 70.00 E9.00 72.00 69.00 6C.00 26.20 A0.00 BB.00
 
 Si la chaîne contient une BOM, il suffit donc de lire ses deux premiers octets
 pour connaître son boutisme.
@@ -293,12 +293,19 @@ Table:
   (les codes sont en binaire, les `b` symbolisent les bits occupés)
 
 [^alphabets-2octets]:
-  alphabets latin, API, grec, copte, cyrillique, arménien, hébreu, syriaque,
-  arabe, thâna (utilisé aux Maldives), n’ko (utilisé en Afrique de l’Ouest) ; la
-  carte se trouve [ici][carte-alphabets-2octets]. Notons qu’à l’exception
-  peut-être du n’ko (qui est une création récente vaguement inspirée de
-  l’arabe), tous ces alphabets sont les descendants encore en vie de l’alphabet
-  phénicien, voire de son évolution en alphabet araméen.
+  alphabets[^fun-fact-phénicien] latin, API, grec, copte, cyrillique, arménien,
+  hébreu, syriaque, arabe, thâna (utilisé aux Maldives), n’ko (utilisé en
+  Afrique de l’Ouest) ; la carte se trouve [ici][carte-alphabets-2octets].
+
+[^fun-fact-phénicien]:
+  Le saviez‐vous ? à l’exception peut-être du n’ko (création récente vaguement
+  inspirée de l’arabe), tous ces alphabets[^systèmes-écriture] sont les
+  descendants encore en vie de l’alphabet phénicien, voire de son évolution en
+  alphabet araméen. :-)
+
+[^systèmes-écriture]:
+  En fait, il faudrait dire « systèmes d’écriture » (l’arabe au moins n’étant
+  pas un « alphabet »). Vous me pardonnez ?
 
 [carte-alphabets-2octets]: https://fr.wikipedia.org/wiki/Table_des_caractères_Unicode_(0000-FFFF)#Alphabets,_abjads,_abugidas_et_syllabaires_modernes
 

@@ -33,3 +33,7 @@ version 4
 	— précisions sur ISO 2022
 	— reformulations
 	— « La grande épopée des encodages » → « L’épopée des encodages »
+
+version 5 [version validée]
+	— corrections & reformulations (remarques de validation)
+	— reformulation de la note sur les alphabets phéniciens

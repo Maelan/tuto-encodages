@@ -68,11 +68,11 @@ veut de nos octets.
 [[information]]
 | La console de Windows crée une difficulté supplémentaire puisqu’au lieu de la
 | nouvelle page de code 1252, elle utilise toujours l’ancienne (850 ou 437) par
-| défaut. Un logiciel qui respecte la _locale_ écrit en Windows-1252 et ses
-| accents s’afficheraient mal dans la console. Pour y remédier, demander à
-| l’utilisateur qu’il fasse `CHCP 1252` ou, mieux, ajuster soi-même l’encodage
-| de la console avec les fonctions `setConsoleOutputCP` et `GetACP` définies
-| dans `<windows.h>`.
+| défaut. Un logiciel qui respecte la _locale_ écrira en Windows-1252 et ses
+| accents s’afficheront mal dans la console. Pour y remédier, demander à
+| l’utilisateur de faire `CHCP 1252` ou, mieux, ajuster soi-même l’encodage de
+| la console avec les fonctions `setConsoleOutputCP` et `GetACP` définies dans
+| `<windows.h>`.
 
 Bref, pour un résultat portable et sans prise de tête, il est avisé d’utiliser
 une bibliothèque tierce. L’implémentation de référence est [la bibliothèque

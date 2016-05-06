@@ -103,7 +103,7 @@ Table:
 *[NBSP]: Non-Breaking SPace
 
 À nouveau un exemple, avec cette fois des caractères accentués, des guillemets
-et des espaces insécables (symbolisés par ▒ pour qu’on les voie), conformément
+et des espaces insécables (symbolisées par ▒ pour qu’on les voit), conformément
 aux règles typographiques :
 
     :::text
@@ -165,7 +165,7 @@ libres (de 0x80 à 0x9F).
 [tuto-typo]: http://www.siteduzero.com/tutoriel-3-454279-l-orthotypographie-bien-ecrire-pour-bien-etre-lu.html
 
 ISO 8859 a aussi été utilisé pour l’alphabet cyrillique (ISO 8859-5), l’arabe
-(ISO 8859-6), le grec (-7) l’hébreu (-8) et même le thaï (-11).
+(ISO 8859-6), le grec (-7), l’hébreu (-8) et même le thaï (-11).
 
 Il existe au total seize parties et il n’y en aura pas plus. En effet, on
 privilégie désormais le développement de l’Unicode.

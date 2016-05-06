@@ -67,12 +67,12 @@ Regardons un peu ce qu’il y a dans l’ASCII :
     -   ||_SP_|| (0x20) : espace (_space_) ;
     -   ||_HT_|| (0x09) : tabulation horizontale (_horizontal tab_), le `'\t'`
         des programmeurs ;
-    -   ||_VT_|| (0x0B) : tabulation verticale (_vertical tab_) ;
+    -   ||_VT_|| (0x0B) : tabulation verticale (_vertical tab_), le `'\v'` des programmeurs ;
     -   ||_LF_|| (0x0A) : nouvelle ligne (_line feed_), le `'\n'` des
         programmeurs ;
     -   ||_CR_|| (0x0D) : retour chariot (_carriage return_), le `'\r'` des
         programmeurs ; marque la fin d’une ligne ;
-    -   ||_FF_|| (0x0C) : nouvelle page (_form feed_) ;
+    -   ||_FF_|| (0x0C) : nouvelle page (_form feed_), le `'\f'` des programmeurs ;
 -   des caractères de contrôle non imprimables (0x00 – 0x1F, et 0x7F), marqués
     comme ||ça|| ; en voici quelques-uns :
     -   ||NUL|| (0x00) : caractère nul (_null_), le `'\0'` des programmeurs ;

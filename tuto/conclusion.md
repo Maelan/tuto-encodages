@@ -1,4 +1,4 @@
-J’espère que cet article aura aidé certains à comprendre ce qui se passe, et à
+J’espère que ce tutoriel aura aidé certains à comprendre ce qui se passe et à
 ne plus avoir peur des « caractères spéciaux »…
 
 Il n’y a rien de sorcier et tout programmeur (voire tout informaticien) devrait
@@ -10,11 +10,11 @@ Quelques autres documents sur le sujet :
 
 -   [« Ce que tout programmeur doit savoir »][joel-fr] (et [sa version
     anglaise][joel-en]) : un article de *Joel on Software* destiné à
-    sensibiliser les programmeurs
+    sensibiliser les programmeurs ;
 -   [« Introduction aux jeux de caractères »][openweb] : un cours de Steve
-    Frécinaux sur le site Openweb
+    Frécinaux sur le site Openweb ;
 -   [`charsets(7)`][man-charsets] : une page du manuel de Linux qui décrit les
-    encodages couramment utilisés avant leur remplacement progressif par Unicode
+    encodages couramment utilisés avant leur remplacement progressif par Unicode.
 
 Ensuite, Wikipédia est très bien fournie sur le thème (ne pas hésiter à lire les
 articles anglais qui sont souvent plus complets). On peut par exemple consulter
