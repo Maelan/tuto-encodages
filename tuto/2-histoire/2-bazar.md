@@ -103,7 +103,7 @@ Table:
 *[NBSP]: Non-Breaking SPace
 
 À nouveau un exemple, avec cette fois des caractères accentués, des guillemets
-et des espaces insécables (symbolisées par ▒ pour qu’on les voit), conformément
+et des espaces insécables (symbolisées par ▒ pour qu’on les voie), conformément
 aux règles typographiques :
 
     :::text

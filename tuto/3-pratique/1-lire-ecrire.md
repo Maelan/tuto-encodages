@@ -177,7 +177,7 @@ Observons que chaque octet qui ne correspond pas à un caractère affichable de
 l’ASCII est codé par `=XX` (Quoted-Printable), et que la fin de ligne est codée
 par la séquence 0x0D, 0x0A (CR-LF).
 
-`recode` a aussi une foncton très pratique pour examiner du texte !
+`recode` a aussi une fonction très pratique pour examiner du texte !
 
     :::console
     $  echo "déjà, 한"  | recode ..dump

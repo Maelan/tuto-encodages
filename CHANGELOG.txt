@@ -37,3 +37,6 @@ version 4
 version 5 [version validée]
 	— corrections & reformulations (remarques de validation)
 	— reformulation de la note sur les alphabets phéniciens
+
+version 6 [brouillon]
+	— corrections (remarques de lecteurs)

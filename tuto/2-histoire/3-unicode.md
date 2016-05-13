@@ -121,7 +121,7 @@ graphème. Ce sont deux codages possibles du *même* graphème, ils doivent donc
 | Le hangeul est un fantasme de lingüistes, je vous laisse en apprendre plus sur
 | l’article Wikipédia !
 
-[hangeul]: https://fr.wikipedia.org/Hangeul
+[hangeul]: https://fr.wikipedia.org/wiki/Hangeul
 [hangeul-isolées]:     https://en.wikipedia.org/wiki/Hangul_Compatibility_Jamo
 [hangeul-composables]: https://en.wikipedia.org/wiki/Hangul_Jamo_(Unicode_block)
 [hangeul-syllabes]:    https://en.wikipedia.org/wiki/Hangul_Syllables
@@ -240,7 +240,7 @@ et c’est l’erreur assurée !
 [boutisme]: https://fr.wikipedia.org/wiki/Boutisme
 
 Pour pallier à cela, on utilise parfois un caractère spécial appelé BOM (_byte
-order mask_, marque d’ordonnancement des octets). l’IANA a aussi créé deux noms
+order mark_, marque d’ordonnancement des octets). L’IANA a aussi créé deux noms
 pour préciser le boutisme employé sur Internet : `UTF-16BE` et `UTF-16LE`.
 
 *[BOM]: Byte Order Mark

@@ -35,10 +35,10 @@ valeurs usuelles.
 |                |(= 1, 2 ou 4 octets, selon|-    Windows : UTF-16[^windows-utf16]      |       |
 |                |le système)               |-    Linux : UTF-32                        |       |
 +----------------+--------------------------+-------------------------------------------+-------+
-|`int16_t[]`     |exactement un `char16_t`  |dépend du système, prévu pour UTF-16       |C11    |
+|`char16_t[]`    |exactement un `char16_t`  |dépend du système, prévu pour UTF-16       |C11    |
 |                |(= 16 bits)               |                                           |       |
 +----------------+--------------------------+-------------------------------------------+-------+
-|`int32_t[]`     |exactement un `char32_t`  |dépend du système, prévu pour UTF-32       |C11    |
+|`char32_t[]`    |exactement un `char32_t`  |dépend du système, prévu pour UTF-32       |C11    |
 |                |(= 32 bits)               |                                           |       |
 +----------------+--------------------------+-------------------------------------------+-------+
 Table: Types et encodages en C
